@@ -1,0 +1,77 @@
+@startuml
+!include ../style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":TodoListParser" as TodoListParser LOGIC_COLOR
+participant ":FindTaskParser" as FindTaskParser LOGIC_COLOR
+participant ":FindTaskCriteria" as FindTaskCriteria LOGIC_COLOR
+participant ":FindTaskCommand" as FindTaskCommand LOGIC_COLOR
+participant ":NameContainsKeywordsPredicate" as NameContainsKeywordsPredicate LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> TodoListParser: parseCommand(arguments)
+activate TodoListParser
+
+create FindTaskParser
+TodoListParser -> FindTaskParser
+activate FindTaskParser
+
+FindTaskParser --> TodoListParser
+deactivate FindTaskParser
+
+TodoListParser -> FindTaskParser : parse(arguments)
+activate FindTaskParser
+    ref over FindTaskParser: Parse command argument using ArgumentTokenizer
+
+create FindTaskCriteria
+FindTaskParser -> FindTaskCriteria
+activate FindTaskCriteria
+
+FindTaskCriteria --> FindTaskParser
+deactivate FindTaskCriteria
+
+opt user provides keywords to search for tasks by name
+
+    create NameContainsKeywordsPredicate
+    FindTaskParser -> NameContainsKeywordsPredicate: NameContainsKeywordsPredicate(searchKeywords)
+    activate NameContainsKeywordsPredicate
+
+    NameContainsKeywordsPredicate --> FindTaskParser
+    deactivate NameContainsKeywordsPredicate
+
+    FindTaskParser -> FindTaskCriteria: addPredicate(namePredicate)
+    activate FindTaskCriteria
+
+    FindTaskCriteria --> FindTaskParser
+    deactivate FindTaskCriteria
+
+end
+    ref over FindTaskParser: Create and add other predicates
+
+create FindTaskCommand
+FindTaskParser -> FindTaskCommand
+activate FindTaskCommand
+
+FindTaskCommand --> FindTaskParser
+deactivate FindTaskCommand
+
+[<-- FindTaskParser: FindTaskCommand
+deactivate FindTaskParser
+
+[-> FindTaskCommand: execute(model)
+activate FindTaskCommand
+
+FindTaskCommand -> Model: updateFilteredTodoList(predicate)
+activate Model
+
+Model --> FindTaskCommand
+deactivate Model
+
+[<--FindTaskCommand: CommandResult
+deactivate FindTaskCommand
+
+@enduml
