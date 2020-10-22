@@ -187,7 +187,7 @@ Figure ?.? Sequence diagram for the execution of `AddContactCommand`
 
 The section below describes the implementation details of each Contact List feature.
 
-####Add Contact Feature
+#### Add Contact Feature
 * This feature creates and adds a new `Contact` using the contact details provided by users
 * `ContactListParser` invokes `AddContactParser#parse()` to parse and validate the command arguments
 * `AddContactCommand#execute()` will be called to add the new `Contact` if the contact does not already exist

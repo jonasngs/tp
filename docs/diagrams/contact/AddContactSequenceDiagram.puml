@@ -5,8 +5,8 @@ box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":ContactListParser" as ContactListParser LOGIC_COLOR
 participant ":AddContactParser" as AddContactParser LOGIC_COLOR
-participant ":AddContactCommand" as AddContactCommand LOGIC_COLOR
-participant ":CommandResult" as CommandResult LOGIC_COLOR
+participant "c:AddContactCommand" as AddContactCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 box Model MODEL_COLOR_T1
@@ -35,16 +35,16 @@ create AddContactCommand
 AddContactParser -> AddContactCommand
 activate AddContactCommand
 
-AddContactCommand --> AddContactParser: command
+AddContactCommand --> AddContactParser: c
 deactivate AddContactCommand
 
-AddContactParser --> ContactListParser: command
+AddContactParser --> ContactListParser: c
 deactivate AddContactParser
 
 AddContactParser -[hidden]-> AddContactCommand
 destroy AddContactParser
 
-ContactListParser --> LogicManager: command
+ContactListParser --> LogicManager: c
 deactivate ContactListParser
 
 LogicManager -> AddContactCommand : execute(model)
@@ -60,10 +60,10 @@ create CommandResult
 AddContactCommand -> CommandResult
 activate CommandResult
 
-CommandResult --> AddContactCommand: CommandResult
+CommandResult --> AddContactCommand: r
 deactivate CommandResult
 
-AddContactCommand --> LogicManager: CommandResult
+AddContactCommand --> LogicManager: r
 deactivate AddContactCommand
 
 AddContactCommand -[hidden]-> LogicManager

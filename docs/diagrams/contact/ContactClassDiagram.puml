@@ -13,9 +13,9 @@ class Name
 class Email
 class Telegram
 
-Contact *--"1" Name
-Contact *--"0..1" Email
-Contact *--"0..1" Telegram
+Contact *-->"1" Name
+Contact *-->"0..1" Email
+Contact *-->"0..1" Telegram
 
 
 @enduml
