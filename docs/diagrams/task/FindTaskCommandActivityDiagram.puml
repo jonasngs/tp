@@ -1,0 +1,22 @@
+@startuml
+
+start
+
+:User enters the command to find a task;
+
+:FindTaskParser parses the command arguments;
+
+if () then ([command arguments are valid])
+        :Create the required Predicate to find matching tasks;
+        :Create a FindTaskCommand with the Predicate as a field;
+        :Execute FindTaskCommand;
+        :Update UI to display the search results;
+else ([else])
+        :Throw an exception to inform users of the invalid command or arguments;
+        :Update UI to display the error message;
+
+endif
+
+stop
+
+@enduml
