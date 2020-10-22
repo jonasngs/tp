@@ -89,6 +89,62 @@ This section describes some noteworthy details on how certain features are imple
 
 1.1 FindTask feature
 
+1.2 Finding Task feature
+The find task function of Cap 5 Buddy enables users to make refined and accurate searches for tasks. 
+This is achieved by allowing users to conduct searches using a set of search parameters specific to tasks.
+
+1.2.1 Details of implementation
+The mechanism to find a task is facilitated by the following classes:
+
+* `FindTaskParser`: Parsers the user input with the aid of `ArgumentTokenizer` to create a 
+`FindTaskCommand` with the required Predicates to find matching tasks as specified by the user.
+    
+    Additionally, it implements the following operation(s):
+    * `FindTaskParser#isAtLeastOnePrefixPresent(...)` - Validates that the user has provided at least one search parameter
+
+* `FindTaskCriteria`: Encapsulates a list of predicates which will be used to find tasks matching the user's search criteria
+    
+    Additionally, it implements the following operation(s):
+    * `FindTaskCriteria#getFindTaskPredicate()` - Composes all the predicates to be used by `FindTaskCommand`
+
+* `FindTaskCommand`: Initialises `predicate` from the instance of `FindTaskCriteria`. `predicate` is used to test if a 
+particular task matches all the search criteria specified by the user.
+
+    Additionally, it implements the following operation(s):
+    * `FindTaskCommand#execute(...)` - This method uses `Model#updateFilteredTodoList` to update the `filteredTodoList`
+    with Tasks that match the `predicate`.
+    
+* Predicate classes that implement `Predicate<Task>` interface
+
+    These `Predicate` classes will test if a particular `Task` matches the corresponding search criteria:
+        
+    * `NameContainsKeywordsPredicate` 
+      * Tests if a given `Task` Name contains any of the specified keywords.
+        
+    * `TaskMatchesDatePredicate` 
+      * Tests if a given `Task` Date matches the search date  
+      * It uses `Task#hasSameDate(...)` to perform the comparison
+                                             
+    * `TaskMatchesPriorityPredicate` 
+      * Tests if a given `Task` Priority matches the search priority
+      * It uses `Task#hasSamePriority(...)` to perform the comparison         
+        
+Given below is an example usage scenario and how the mechanism for adding contacts behaves at each step:
+        
+Step 1: The user inputs `findtask n/lab p/Highest` into the command box to find tasks 
+whose `TaskName` contains "lab" and has a `Priority` "Highest".
+
+Step 2: `FindTaskParser` parsers and validates the command arguments.
+
+Step 3: `NameContainsKeywordsPredicate` and `TaskMatchesPriorityPredicate` objects encapsulating the 
+search criteria are created and composed by `FindTaskCriteria#getFindTaskPredicate()` to instantiate a `FindTaskCommand`.
+
+Step 4: `FindTaskCommand` calls `Model#updateFilteredTodoList(...)` to update the filteredTodoList with the composed predicate.
+
+
+The following activity diagram summarizes what happens when a user executes the ```FindTaskCommand```:
+![FindTaskCommandActivityDiagram](images/task/FindTaskCommandActivityDiagram.png)
+Figure ?.? Activity diagram representing the execution of ```FindTaskCommand```
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
