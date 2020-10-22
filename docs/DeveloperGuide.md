@@ -1,4 +1,4 @@
-~~~~---
+---
 layout: page
 title: Developer Guide
 ---
@@ -86,6 +86,8 @@ This section describes some noteworthy details on how certain features are imple
 ##### Aspect: How undo & redo executes
 
 ### \[Proposed\] Data archiving
+
+1.1 FindTask feature
 
 --------------------------------------------------------------------------------------------------------------------
 
