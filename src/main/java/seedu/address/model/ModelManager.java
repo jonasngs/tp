@@ -89,7 +89,7 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void setAddressBookFilePath(Path addressBookFilePath) {
+    public void setModuleListFilePath(Path addressBookFilePath) {
         requireNonNull(addressBookFilePath);
         userPrefs.setModuleListFilePath(addressBookFilePath);
     }

@@ -51,7 +51,7 @@ public interface Model {
     /**
      * Sets the user prefs' address book file path.
      */
-    void setAddressBookFilePath(Path addressBookFilePath);
+    void setModuleListFilePath(Path addressBookFilePath);
 
     // ============================ ModuleList ==================================================
 
