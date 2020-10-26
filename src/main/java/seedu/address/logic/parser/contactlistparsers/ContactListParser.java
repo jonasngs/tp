@@ -8,13 +8,13 @@ import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.HelpCommand;
-import seedu.address.logic.commands.contactlistcommands.AddContactCommand;
-import seedu.address.logic.commands.contactlistcommands.DeleteContactCommand;
-import seedu.address.logic.commands.contactlistcommands.EditContactCommand;
-import seedu.address.logic.commands.contactlistcommands.FindContactCommand;
-import seedu.address.logic.commands.contactlistcommands.HelpContactCommand;
-import seedu.address.logic.commands.contactlistcommands.ListContactCommand;
-import seedu.address.logic.commands.contactlistcommands.ViewContactCommand;
+import seedu.address.logic.commands.contact.AddContactCommand;
+import seedu.address.logic.commands.contact.DeleteContactCommand;
+import seedu.address.logic.commands.contact.EditContactCommand;
+import seedu.address.logic.commands.contact.FindContactCommand;
+import seedu.address.logic.commands.contact.HelpContactCommand;
+import seedu.address.logic.commands.contact.ListContactCommand;
+import seedu.address.logic.commands.contact.ViewContactCommand;
 import seedu.address.logic.parser.FeatureParser;
 import seedu.address.logic.parser.exceptions.ParseException;
 

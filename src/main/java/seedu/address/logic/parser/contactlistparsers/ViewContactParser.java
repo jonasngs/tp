@@ -1,6 +1,6 @@
 package seedu.address.logic.parser.contactlistparsers;
 
-import seedu.address.logic.commands.contactlistcommands.ViewContactCommand;
+import seedu.address.logic.commands.contact.ViewContactCommand;
 import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.exceptions.ParseException;
 

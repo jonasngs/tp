@@ -1,4 +1,4 @@
-package seedu.address.logic.commands.contactlistcommands;
+package seedu.address.logic.commands.contact;
 
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;

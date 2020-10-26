@@ -7,7 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TELEGRAM;
 
 import java.util.stream.Stream;
 
-import seedu.address.logic.commands.contactlistcommands.AddContactCommand;
+import seedu.address.logic.commands.contact.AddContactCommand;
 import seedu.address.logic.parser.ArgumentMultimap;
 import seedu.address.logic.parser.ArgumentTokenizer;
 import seedu.address.logic.parser.Parser;
