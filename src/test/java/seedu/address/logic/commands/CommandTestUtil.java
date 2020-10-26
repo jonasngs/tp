@@ -10,10 +10,13 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ZOOM_LINK;
 import java.util.Arrays;
 
 import seedu.address.commons.core.index.Index;
+import seedu.address.logic.commands.contact.EditContactCommand;
+import seedu.address.logic.commands.contact.EditContactDescriptor;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.contact.Contact;
 import seedu.address.model.contact.NameContainsKeywordsPredicate;
+import seedu.address.testutil.EditContactDescriptorBuilder;
 
 // import seedu.address.model.ModuleList;
 // import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -58,16 +61,16 @@ public class CommandTestUtil {
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
 
-    //public static final EditCommand.EditModuleDescriptor DESC_AMY;
-    //public static final EditCommand.EditModuleDescriptor DESC_BOB;
+    public static final EditContactDescriptor DESC_AMY;
+    public static final EditContactDescriptor DESC_BOB;
 
     static {
-        //DESC_AMY = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
-        //        .withEmail(VALID_EMAIL_AMY).withTags(VALID_TAG_FRIEND)
-        //        .build();
-        //DESC_BOB = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
-        //       .withEmail(VALID_EMAIL_BOB).withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
-        //       .build();
+        DESC_AMY = new EditContactDescriptorBuilder().withName(VALID_NAME_AMY)
+                .withEmail(VALID_EMAIL_AMY).withTags(VALID_TAG_FRIEND)
+                .build();
+        DESC_BOB = new EditContactDescriptorBuilder().withName(VALID_NAME_BOB)
+               .withEmail(VALID_EMAIL_BOB).withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
+               .build();
     }
 
     /**
