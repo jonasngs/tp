@@ -13,9 +13,9 @@ import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
 //import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 //import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_CONTACT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_CONTACT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_CONTACT;
 
 import org.junit.jupiter.api.Test;
 
@@ -81,7 +81,7 @@ public class EditModuleParserTest {
 
     @Test
     public void parse_allFieldsSpecified_success() {
-        Index targetIndex = INDEX_SECOND_PERSON;
+        Index targetIndex = INDEX_SECOND_CONTACT;
         String userInput = targetIndex.getOneBased() + TAG_DESC_HUSBAND
                 + EMAIL_DESC_AMY + NAME_DESC_AMY + TAG_DESC_FRIEND;
 
@@ -94,7 +94,7 @@ public class EditModuleParserTest {
 
     @Test
     public void parse_someFieldsSpecified_success() {
-        Index targetIndex = INDEX_FIRST_PERSON;
+        Index targetIndex = INDEX_FIRST_CONTACT;
         String userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY;
 
         //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
@@ -106,7 +106,7 @@ public class EditModuleParserTest {
     @Test
     public void parse_oneFieldSpecified_success() {
         // name
-        Index targetIndex = INDEX_THIRD_PERSON;
+        Index targetIndex = INDEX_THIRD_CONTACT;
         String userInput = targetIndex.getOneBased() + NAME_DESC_AMY;
         //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
         //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
@@ -127,7 +127,7 @@ public class EditModuleParserTest {
 
     @Test
     public void parse_multipleRepeatedFields_acceptsLast() {
-        Index targetIndex = INDEX_FIRST_PERSON;
+        Index targetIndex = INDEX_FIRST_CONTACT;
         String userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY
                 + TAG_DESC_FRIEND + EMAIL_DESC_AMY + TAG_DESC_FRIEND
                 + EMAIL_DESC_BOB + TAG_DESC_HUSBAND;
@@ -143,7 +143,7 @@ public class EditModuleParserTest {
     @Test
     public void parse_invalidValueFollowedByValidValue_success() {
         // no other valid values specified
-        Index targetIndex = INDEX_FIRST_PERSON;
+        Index targetIndex = INDEX_FIRST_CONTACT;
         // String userInput = targetIndex.getOneBased();
         //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().build();
         //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
@@ -159,7 +159,7 @@ public class EditModuleParserTest {
 
     @Test
     public void parse_resetTags_success() {
-        Index targetIndex = INDEX_THIRD_PERSON;
+        Index targetIndex = INDEX_THIRD_CONTACT;
         String userInput = targetIndex.getOneBased() + TAG_EMPTY;
 
         //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();

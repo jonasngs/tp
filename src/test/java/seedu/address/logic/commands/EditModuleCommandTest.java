@@ -10,7 +10,7 @@ package seedu.address.logic.commands;
 // import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 // import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
 // import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_CONTACT;
 // import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
@@ -134,7 +134,7 @@ public class EditModuleCommandTest {
     @Test
     public void execute_invalidPersonIndexFilteredList_failure() {
         // showPersonAtIndex(model, INDEX_FIRST_PERSON);
-        Index outOfBoundIndex = INDEX_SECOND_PERSON;
+        Index outOfBoundIndex = INDEX_SECOND_CONTACT;
         // ensures that outOfBoundIndex is still in bounds of address book list
         // assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
 

@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 // import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 // import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 // import static seedu.address.logic.commands.CommandTestUtil.showPersonAtIndex;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_CONTACT;
+import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_CONTACT;
 // import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ public class DeleteModuleCommandTest {
         // showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         // Person personToDelete = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
-        DeleteModuleCommand deleteModuleCommand = new DeleteModuleCommand(INDEX_FIRST_PERSON);
+        DeleteModuleCommand deleteModuleCommand = new DeleteModuleCommand(INDEX_FIRST_CONTACT);
 
         // String expectedMessage = String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, personToDelete);
 
@@ -68,7 +68,7 @@ public class DeleteModuleCommandTest {
     public void execute_invalidIndexFilteredList_throwsCommandException() {
         // showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
-        Index outOfBoundIndex = INDEX_SECOND_PERSON;
+        Index outOfBoundIndex = INDEX_SECOND_CONTACT;
         // ensures that outOfBoundIndex is still in bounds of address book list
         // assertTrue(outOfBoundIndex.getZeroBased() < model.getAddressBook().getPersonList().size());
 
@@ -78,14 +78,14 @@ public class DeleteModuleCommandTest {
 
     @Test
     public void equals() {
-        DeleteModuleCommand deleteFirstCommand = new DeleteModuleCommand(INDEX_FIRST_PERSON);
-        DeleteModuleCommand deleteSecondCommand = new DeleteModuleCommand(INDEX_SECOND_PERSON);
+        DeleteModuleCommand deleteFirstCommand = new DeleteModuleCommand(INDEX_FIRST_CONTACT);
+        DeleteModuleCommand deleteSecondCommand = new DeleteModuleCommand(INDEX_SECOND_CONTACT);
 
         // same object -> returns true
         assertTrue(deleteFirstCommand.equals(deleteFirstCommand));
 
         // same values -> returns true
-        DeleteModuleCommand deleteFirstCommandCopy = new DeleteModuleCommand(INDEX_FIRST_PERSON);
+        DeleteModuleCommand deleteFirstCommandCopy = new DeleteModuleCommand(INDEX_FIRST_CONTACT);
         assertTrue(deleteFirstCommand.equals(deleteFirstCommandCopy));
 
         // different types -> returns false

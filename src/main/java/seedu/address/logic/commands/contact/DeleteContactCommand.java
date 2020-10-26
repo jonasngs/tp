@@ -30,6 +30,7 @@ public class DeleteContactCommand extends Command {
     private final Index targetIndex;
 
     public DeleteContactCommand(Index targetIndex) {
+        requireNonNull(targetIndex);
         this.targetIndex = targetIndex;
     }
 

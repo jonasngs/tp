@@ -1,19 +1,20 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ZOOM_LINK;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
-// import static seedu.address.testutil.Assert.assertThrows;
 
-// import java.util.ArrayList;
-// import java.util.Arrays;
-// import java.util.List;
+import java.util.Arrays;
+
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.contact.Contact;
+import seedu.address.model.contact.NameContainsKeywordsPredicate;
+
 // import seedu.address.model.ModuleList;
 // import seedu.address.model.person.NameContainsKeywordsPredicate;
 // import seedu.address.model.person.Person;
@@ -112,17 +113,17 @@ public class CommandTestUtil {
         // assertEquals(expectedFilteredList, actualModel.getFilteredPersonList());
     }
     /**
-     * Updates {@code model}'s filtered list to show only the person at the given {@code targetIndex} in the
-     * {@code model}'s address book.
+     * Updates {@code model}'s filtered list to show only the contact at the given {@code targetIndex} in the
+     * {@code model}'s contact list.
      */
-    public static void showPersonAtIndex(Model model, Index targetIndex) {
-        // assertTrue(targetIndex.getZeroBased() < model.getFilteredPersonList().size());
+    public static void showContactAtIndex(Model model, Index targetIndex) {
+        assertTrue(targetIndex.getZeroBased() < model.getFilteredContactList().size());
 
-        // Person person = model.getFilteredPersonList().get(targetIndex.getZeroBased());
-        // final String[] splitName = person.getName().fullName.split("\\s+");
-        // model.updateFilteredPersonList(new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
+        Contact contact = model.getFilteredContactList().get(targetIndex.getZeroBased());
+        final String[] splitName = contact.getName().fullName.split("\\s+");
+        model.updateFilteredContactList(new NameContainsKeywordsPredicate(Arrays.asList(splitName[0])));
 
-        // assertEquals(1, model.getFilteredPersonList().size());
+        assertEquals(1, model.getFilteredContactList().size());
     }
 
 }
