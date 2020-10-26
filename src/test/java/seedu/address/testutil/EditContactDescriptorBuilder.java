@@ -11,6 +11,7 @@ import seedu.address.logic.commands.contact.EditContactDescriptor;
 import seedu.address.model.contact.Contact;
 import seedu.address.model.contact.Email;
 import seedu.address.model.contact.Name;
+import seedu.address.model.contact.Telegram;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -52,6 +53,14 @@ public class EditContactDescriptorBuilder {
      */
     public EditContactDescriptorBuilder withEmail(String email) {
         descriptor.setEmail(new Email(email));
+        return this;
+    }
+
+    /**
+     * Sets the {@code Telegram} of the {@code EditContactDescriptor} that we are building.
+     */
+    public EditContactDescriptorBuilder withTelegram(String telegram) {
+        descriptor.setTelegram(new Telegram(telegram));
         return this;
     }
 

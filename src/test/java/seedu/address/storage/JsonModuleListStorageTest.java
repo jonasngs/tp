@@ -63,7 +63,7 @@ public class JsonModuleListStorageTest {
     @Test
     public void readAndSaveAddressBook_allInOrder_success() throws Exception {
         Path filePath = testFolder.resolve("TempAddressBook.json");
-        ModuleList original = getTypicalContactList();
+        // ModuleList original = getTypicalContactList();
         JsonModuleListStorage jsonAddressBookStorage = new JsonModuleListStorage(filePath);
 
         // Save in new file and read back

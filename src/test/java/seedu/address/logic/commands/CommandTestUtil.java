@@ -36,6 +36,8 @@ public class CommandTestUtil {
     public static final String VALID_ADDRESS_BOB = "Block 123, Bobby Street 3";
     public static final String VALID_TAG_HUSBAND = "husband";
     public static final String VALID_TAG_FRIEND = "friend";
+    public static final String VALID_TELEGRAM_AMY = "@amytele";
+    public static final String VALID_TELEGRAM_BOB = "@bobtele";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
@@ -66,11 +68,12 @@ public class CommandTestUtil {
 
     static {
         DESC_AMY = new EditContactDescriptorBuilder().withName(VALID_NAME_AMY)
-                .withEmail(VALID_EMAIL_AMY).withTags(VALID_TAG_FRIEND)
+                .withEmail(VALID_EMAIL_AMY).withTelegram(VALID_TELEGRAM_AMY).withTags(VALID_TAG_FRIEND)
                 .build();
         DESC_BOB = new EditContactDescriptorBuilder().withName(VALID_NAME_BOB)
-               .withEmail(VALID_EMAIL_BOB).withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
-               .build();
+                .withEmail(VALID_EMAIL_BOB).withTelegram(VALID_TELEGRAM_BOB)
+                .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
+                .build();
     }
 
     /**
