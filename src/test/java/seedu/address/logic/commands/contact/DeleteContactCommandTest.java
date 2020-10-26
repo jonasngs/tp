@@ -1,5 +1,6 @@
 package seedu.address.logic.commands.contact;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
@@ -91,6 +92,27 @@ public class DeleteContactCommandTest {
         assertCommandFailure(deleteContactCommand, model, Messages.MESSAGE_INVALID_CONTACT_DISPLAYED_INDEX);
     }
 
+    @Test
+    public void equals() {
+        DeleteContactCommand deleteFirstContactCommand = new DeleteContactCommand(INDEX_FIRST_CONTACT);
+        DeleteContactCommand deleteSecondContactCommand = new DeleteContactCommand(INDEX_SECOND_CONTACT);
+
+        // same object -> returns true
+        assertTrue(deleteFirstContactCommand.equals(deleteFirstContactCommand));
+
+        // same Index value -> returns true
+        DeleteContactCommand deleteFirstContactCommandCopy = new DeleteContactCommand(INDEX_FIRST_CONTACT);
+        assertTrue(deleteFirstContactCommand.equals(deleteFirstContactCommandCopy));
+
+        // different types -> returns false
+        assertFalse(deleteFirstContactCommand.equals(1));
+
+        // null -> returns false
+        assertFalse(deleteFirstContactCommand.equals(null));
+
+        // different contact index-> returns false
+        assertFalse(deleteFirstContactCommand.equals(deleteSecondContactCommand));
+    }
 
     /**
      * Updates {@code model}'s filtered contact list to show no contact.
