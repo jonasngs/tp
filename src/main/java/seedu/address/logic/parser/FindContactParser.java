@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import seedu.address.logic.commands.FindContactCommand;
+import seedu.address.logic.commands.contact.FindContactCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.contact.NameContainsKeywordsPredicate;
 

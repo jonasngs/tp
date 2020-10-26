@@ -11,7 +11,6 @@ import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.contact.AddContactCommand;
 import seedu.address.logic.commands.contact.DeleteContactCommand;
 import seedu.address.logic.commands.contact.EditContactCommand;
-import seedu.address.logic.commands.contact.FindContactCommand;
 import seedu.address.logic.commands.contact.HelpContactCommand;
 import seedu.address.logic.commands.contact.ListContactCommand;
 import seedu.address.logic.commands.contact.ViewContactCommand;
