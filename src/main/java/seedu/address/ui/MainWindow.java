@@ -38,6 +38,7 @@ public class MainWindow extends UiPart<Stage> {
     private ContactListPanel contactListPanel;
     private EventListPanel eventListPanel;
     private TodoListPanel todoListPanel;
+    private DetailDisplay detailDisplay;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -62,6 +63,9 @@ public class MainWindow extends UiPart<Stage> {
 
     @FXML
     private StackPane statusbarPlaceholder;
+
+    @FXML
+    private StackPane viewItemDisplayPanel;
 
 
     /**
@@ -139,6 +143,9 @@ public class MainWindow extends UiPart<Stage> {
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
 
+        detailDisplay = new DetailDisplay();
+        viewItemDisplayPanel.getChildren().add(detailDisplay.getRoot());
+
         // StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
         // statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
@@ -204,8 +211,11 @@ public class MainWindow extends UiPart<Stage> {
         try {
             CommandResult commandResult = logic.execute(commandText);
             logger.info("Result: " + commandResult.getFeedbackToUser());
-            resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
-
+            if (commandText.contains("view")) {
+                detailDisplay.setDisplay(commandResult);
+            } else {
+                resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
+            }
             if (commandResult.isShowHelp()) {
                 handleHelp();
             }

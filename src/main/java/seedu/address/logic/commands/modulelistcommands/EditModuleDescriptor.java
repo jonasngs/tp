@@ -47,7 +47,7 @@ public class EditModuleDescriptor {
      * Returns true if at least one field is edited.
      */
     public boolean isAnyFieldEdited() {
-        return CollectionUtil.isAnyNonNull(moduleName, zoomLinks, modularCredits, gradePoint);
+        return CollectionUtil.isAnyNonNull(moduleName, zoomLinks, modularCredits, gradePoint, tags);
     }
 
     /**

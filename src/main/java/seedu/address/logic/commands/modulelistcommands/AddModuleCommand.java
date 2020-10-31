@@ -41,7 +41,7 @@ public class AddModuleCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        if (model.hasModule(module)) {
+        if (model.hasModule(module) || model.hasArchivedModule(module)) {
             throw new CommandException(MESSAGE_DUPLICATE_MODULE);
         }
 

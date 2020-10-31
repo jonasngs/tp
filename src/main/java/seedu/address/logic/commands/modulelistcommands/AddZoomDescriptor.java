@@ -1,16 +1,17 @@
 package seedu.address.logic.commands.modulelistcommands;
 
+import seedu.address.model.module.ModuleLesson;
 import seedu.address.model.module.ZoomLink;
 
 /**
- * Stores the details of the zoom link to be added to a module.
+ * Stores the details of the zoom link to be added to a module and the lesson the link belongs to.
  */
 public class AddZoomDescriptor {
 
     /** ZoomLink object that contains the zoom link to be added. */
     private ZoomLink zoomLink;
-    /** String containing the details of the module lesson which the zoom link belongs to. */
-    private String moduleLessonType;
+    /** ModuleLesson object containing the details of the module lesson which the zoom link belongs to. */
+    private ModuleLesson moduleLesson;
 
     public AddZoomDescriptor() {}
 
@@ -19,7 +20,7 @@ public class AddZoomDescriptor {
      */
     public AddZoomDescriptor(AddZoomDescriptor toCopy) {
         setLink(toCopy.getZoomLink());
-        setModuleLessonType(toCopy.getModuleLessonType());
+        setModuleLesson(toCopy.getModuleLesson());
     }
 
     public void setLink(ZoomLink zoomLink) {
@@ -30,12 +31,12 @@ public class AddZoomDescriptor {
         return this.zoomLink;
     }
 
-    public void setModuleLessonType(String moduleLessonType) {
-        this.moduleLessonType = moduleLessonType;
+    public void setModuleLesson(ModuleLesson moduleLesson) {
+        this.moduleLesson = moduleLesson;
     }
 
-    public String getModuleLessonType() {
-        return this.moduleLessonType;
+    public ModuleLesson getModuleLesson() {
+        return this.moduleLesson;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class AddZoomDescriptor {
         AddZoomDescriptor descriptor = (AddZoomDescriptor) other;
 
         return getZoomLink().equals(descriptor.getZoomLink())
-                && getModuleLessonType().equals(descriptor.getModuleLessonType());
+                && getModuleLesson().equals(descriptor.getModuleLesson());
     }
 
 }

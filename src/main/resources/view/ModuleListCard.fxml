@@ -30,8 +30,7 @@
       </HBox>
       <FlowPane fx:id="tags" />
       <FlowPane fx:id="zoomLinks" />
-      <Label fx:id="address" styleClass="cell_small_label" text="\$address" />
-      <Label fx:id="zoomLink" styleClass="cell_small_label" text="\$zoomLink" />
+      <Label fx:id="zoomLink" styleClass="cell_small_label" />
          <Label fx:id="modularCredits" layoutX="25.0" layoutY="71.0" styleClass="cell_small_label" text="\$modularCredits" />
       <FlowPane fx:id="assignments" />
     </VBox>

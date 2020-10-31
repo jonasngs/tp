@@ -60,9 +60,9 @@ public class ModuleCard extends UiPart<Region> {
                         new Label(assignment.getAssignmentName().get().assignmentName)));
         assignments.setHgap(10);
         assignments.setVgap(10);
-        //module.getTags().stream()
-        //        .sorted(Comparator.comparing(tag -> tag.tagName))
-        //        .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        module.getTagsForUi().stream()
+                .sorted(Comparator.comparing(tag -> tag.tagName))
+                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 
     @Override

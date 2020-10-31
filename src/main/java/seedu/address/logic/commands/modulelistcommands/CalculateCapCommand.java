@@ -26,7 +26,8 @@ public class CalculateCapCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
-        List<Module> lastShownList = model.getFilteredModuleList();
+        List<Module> lastShownList = model.getFilteredUnarchivedModuleList();
+        lastShownList.addAll(model.getFilteredArchivedModuleList());
         try {
             cap = calculateCap(lastShownList);
         } catch (CapCalculationException capCalculationException) {
@@ -54,7 +55,7 @@ public class CalculateCapCommand extends Command {
         double totalPoints = 0.0;
         double totalMC = 0.0;
         for (Module m : modules) {
-            if (m.isCompleted()) {
+            if (m.isCompleted() && m.hasGradePoint()) {
                 double modularCredits = m.getModularCredits().moduleCredits;
                 double gradePoints = m.getGradeTracker().getGradePoint().get().gradePoint;
                 totalMC += modularCredits;

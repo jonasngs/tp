@@ -3,7 +3,6 @@ package seedu.address.model.task;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -97,15 +96,6 @@ public class UniqueTodoList implements Iterable<Task> {
         }
 
         internalList.setAll(tasks);
-    }
-
-    /**
-     * Sort the list using the comparator.
-     *
-     * @param comparator comparator for sorting
-     */
-    public void sort(Comparator<? super Task> comparator) {
-        internalList.sort(comparator);
     }
 
     /**

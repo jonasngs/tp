@@ -6,7 +6,7 @@ title: Cap 5.0 Buddy
 [![CI Status](https://github.com/AY2021S1-CS2103T-F12-3/tp/workflows/Java%20CI/badge.svg)](https://github.com/AY2021S1-CS2103T-F12-3/tp/actions)
 [![codecov](https://codecov.io/gh/AY2021S1-CS2103T-F12-3/tp/branch/master/graph/badge.svg)](https://codecov.io/gh/AY2021S1-CS2103T-F12-3/tp)
 
-![Ui](images/OriginalImages/Ui.png)
+![Ui](images/Ui.png)
 
 **Cap 5.0 Buddy is a desktop application that helps NUS SoC students to keep track of their module details efficiently.**
 While it has a GUI, most of the user interactions happen using a CLI (Command Line Interface).

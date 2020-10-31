@@ -17,7 +17,7 @@ public class ContactComparatorByName implements Comparator<Contact> {
      */
     @Override
     public int compare(Contact contact, Contact otherContact) {
-        int value = contact.getName().fullName.compareToIgnoreCase(otherContact.getName().fullName);
+        int value = contact.getName().getName().compareToIgnoreCase(otherContact.getName().getName());
         if (value > 0) {
             return 1;
         } else if (value == 0) {

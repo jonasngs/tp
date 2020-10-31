@@ -6,7 +6,6 @@ import static seedu.address.commons.core.Messages.MESSAGE_UNKNOWN_COMMAND;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.HelpCommand;
@@ -56,8 +55,8 @@ public class SchedulerParser implements FeatureParser {
         case ViewEventCommand.COMMAND_WORD:
             return new ViewEventParser().parse(arguments);
 
-        case ClearCommand.COMMAND_WORD:
-            return new ClearCommand();
+        // case ClearCommand.COMMAND_WORD:
+        //    return new ClearCommand();
 
         case FindEventCommand.COMMAND_WORD:
             return new FindEventParser().parse(arguments);

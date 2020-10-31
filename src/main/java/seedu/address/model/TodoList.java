@@ -7,9 +7,6 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import seedu.address.model.task.Task;
 import seedu.address.model.task.UniqueTodoList;
-import seedu.address.model.task.comparator.TaskComparatorByDate;
-import seedu.address.model.task.comparator.TaskComparatorByName;
-import seedu.address.model.task.comparator.TaskComparatorByPriority;
 
 /**
  * Wraps all data at the todo list level.
@@ -96,33 +93,11 @@ public class TodoList implements ReadOnlyTodoList {
         tasks.remove(key);
     }
 
-    /**
-     * Sort the list by name.
-     */
-    public void sortByName() {
-        tasks.sort(new TaskComparatorByName());
-    }
-
-    /**
-     * Sort the list by date.
-     */
-    public void sortByDate() {
-        tasks.sort(new TaskComparatorByDate());
-    }
-
-    /**
-     * Sort the list by priority.
-     */
-    public void sortByPriority() {
-        tasks.sort(new TaskComparatorByPriority());
-    }
-
     //// util methods
 
     @Override
     public String toString() {
         return tasks.asUnmodifiableObservableList().size() + " tasks";
-        // TODO: refine later
     }
 
     @Override

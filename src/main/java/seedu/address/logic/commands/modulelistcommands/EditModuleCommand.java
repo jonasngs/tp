@@ -18,6 +18,7 @@ import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.module.ModularCredits;
 import seedu.address.model.module.Module;
+import seedu.address.model.module.ModuleLesson;
 import seedu.address.model.module.ModuleName;
 import seedu.address.model.module.ZoomLink;
 import seedu.address.model.module.grade.GradeTracker;
@@ -62,7 +63,7 @@ public class EditModuleCommand extends Command {
         List<Module> lastShownList = model.getFilteredModuleList();
 
         if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
+            throw new CommandException(Messages.MESSAGE_INVALID_MODULE_DISPLAYED_INDEX);
         }
         Module module = lastShownList.get(index.getZeroBased());
         Module editedModule = createEditedModule(module, editModuleDescriptor);
@@ -84,15 +85,15 @@ public class EditModuleCommand extends Command {
         assert moduleToEdit != null;
         Set<Tag> updatedTags = editModuleDescriptor.getTags().orElse(moduleToEdit.getTags());
         ModuleName moduleName = editModuleDescriptor.getModuleName().orElse(moduleToEdit.getName());
-        Map<String, ZoomLink> updatedLinks = editModuleDescriptor.getZoomLinks().orElse(moduleToEdit.getAllLinks());
         GradeTracker gradeTracker = moduleToEdit.getGradeTracker();
+        Map<ModuleLesson, ZoomLink> zoomLinks = moduleToEdit.getAllLinks();
 
         if (editModuleDescriptor.getGradePoint().isPresent()) {
             gradeTracker.setGradePoint(editModuleDescriptor.getGradePoint().get());
         }
         ModularCredits modularCredits = editModuleDescriptor
                 .getModularCredits().orElse((moduleToEdit.getModularCredits()));
-        return new Module(moduleName, updatedLinks, gradeTracker, updatedTags, modularCredits);
+        return new Module(moduleName, zoomLinks, gradeTracker, updatedTags, modularCredits);
 
     }
 

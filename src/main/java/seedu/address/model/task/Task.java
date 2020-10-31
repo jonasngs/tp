@@ -183,7 +183,7 @@ public class Task {
     public Set<Tag> getTagsForUi() {
         if (this.tags == null) {
             HashSet<Tag> defaultTags = new HashSet<>();
-            defaultTags.add(new Tag("Tags not provided"));
+            defaultTags.add(new Tag("TagNotProvided"));
             return defaultTags;
         } else {
             return this.tags;

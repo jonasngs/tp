@@ -21,6 +21,7 @@ public class StorageManager implements Storage {
 
     private static final Logger logger = LogsCenter.getLogger(StorageManager.class);
     private ModuleListStorage moduleListStorage;
+    private ModuleListStorage archivedModuleListStorage;
     private ContactListStorage contactListStorage;
     private TodoListStorage todoListStorage;
     private UserPrefsStorage userPrefsStorage;
@@ -30,11 +31,13 @@ public class StorageManager implements Storage {
      * Creates a {@code StorageManager} with the given {@code ModuleListStorage},
      * {@code ContactListStorage} and {@code UserPrefStorage}.
      */
-    public StorageManager(ModuleListStorage moduleListStorage, ContactListStorage contactListStorage,
-                          TodoListStorage todoListStorage, EventListStorage eventListStorage,
-                          UserPrefsStorage userPrefsStorage) {
+
+    public StorageManager(ModuleListStorage moduleListStorage, ModuleListStorage archivedModuleListStorage,
+                          ContactListStorage contactListStorage, TodoListStorage todoListStorage,
+                          EventListStorage eventListStorage, UserPrefsStorage userPrefsStorage) {
         super();
         this.moduleListStorage = moduleListStorage;
+        this.archivedModuleListStorage = archivedModuleListStorage;
         this.contactListStorage = contactListStorage;
         this.todoListStorage = todoListStorage;
         this.userPrefsStorage = userPrefsStorage;
@@ -87,7 +90,29 @@ public class StorageManager implements Storage {
         logger.fine("Attempting to write to data file: " + filePath);
         moduleListStorage.saveModuleList(moduleList, filePath);
     }
+    public Path getArchivedModuleListFilePath() {
+        return archivedModuleListStorage.getModuleListFilePath();
+    }
+    @Override
+    public Optional<ReadOnlyModuleList> readArchivedModuleList() throws DataConversionException, IOException {
+        return readArchivedModuleList(archivedModuleListStorage.getModuleListFilePath());
+    }
+    @Override
+    public Optional<ReadOnlyModuleList> readArchivedModuleList(Path filePath) throws DataConversionException,
+            IOException {
+        logger.fine("Attempting to read archived modulelist data from file: " + filePath);
+        return archivedModuleListStorage.readModuleList(filePath);
+    }
+    @Override
+    public void saveArchivedModuleList(ReadOnlyModuleList archivedModuleList) throws IOException {
+        saveArchivedModuleList(archivedModuleList, archivedModuleListStorage.getModuleListFilePath());
+    }
 
+    @Override
+    public void saveArchivedModuleList(ReadOnlyModuleList moduleList, Path filePath) throws IOException {
+        logger.fine("Attempting to write to archived modulelist data file: " + filePath);
+        archivedModuleListStorage.saveModuleList(moduleList, filePath);
+    }
     // ================ ContactList methods ==============================
     @Override
     public Path getContactListFilePath() {

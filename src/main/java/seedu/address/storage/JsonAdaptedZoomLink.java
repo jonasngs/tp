@@ -11,16 +11,18 @@ import seedu.address.model.module.ZoomLink;
  */
 class JsonAdaptedZoomLink {
 
-    private final String key;
     private final String link;
+
+    // Additional data for mapping
+    private final String lesson;
 
     /**
      * Constructs a {@code JsonAdaptedZoomLink} with the given {@code link}.
      */
     @JsonCreator
-    public JsonAdaptedZoomLink(@JsonProperty("key") String key,
+    public JsonAdaptedZoomLink(@JsonProperty("lesson") String lesson,
                                @JsonProperty("link") String link) {
-        this.key = key;
+        this.lesson = lesson;
         this.link = link;
     }
 
@@ -28,12 +30,12 @@ class JsonAdaptedZoomLink {
      * Converts a given {@code ZoomLink} into this class for Jackson use.
      */
     public JsonAdaptedZoomLink(String key, ZoomLink source) {
-        this.key = key;
+        this.lesson = key;
         link = source.getLink();
     }
 
-    public String getKey() {
-        return key;
+    public String getLesson() {
+        return lesson;
     }
 
     public String getLink() {

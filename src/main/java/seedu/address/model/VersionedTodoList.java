@@ -23,7 +23,7 @@ public class VersionedTodoList extends TodoList {
     /**
      * Saves the current todo list state in history.
      */
-    public void commit(TodoList todoList) {
+    public void commit(ReadOnlyTodoList todoList) {
         todoListStateList.subList(this.currentStatePointer + 1, todoListStateList.size()).clear();
         todoListStateList.add(new TodoList(todoList));
         this.currentStatePointer += 1;

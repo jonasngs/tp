@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.CollectionUtil;
 import seedu.address.logic.commands.Command;
@@ -56,7 +57,11 @@ public class EditEventCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         List<Event> lastShownList = model.getFilteredEventList();
-        //TODO: need to catch index out of bound error somewhere
+
+        if (index.getZeroBased() >= lastShownList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_MODULE_DISPLAYED_INDEX);
+        }
+
         Event eventToEdit = lastShownList.get(index.getZeroBased());
         Event updatedEvent = createEditedEvent(eventToEdit, descriptor);
         System.out.println(eventToEdit.equals(updatedEvent));

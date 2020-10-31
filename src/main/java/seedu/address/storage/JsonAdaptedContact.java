@@ -51,7 +51,7 @@ public class JsonAdaptedContact {
      * Converts a given {@code Contact} into this class for Jackson use.
      */
     public JsonAdaptedContact(Contact source) {
-        name = source.getName().fullName;
+        name = source.getName().getName();
         email = source.getEmail().value;
 
         if (source.getTelegram().isPresent()) {

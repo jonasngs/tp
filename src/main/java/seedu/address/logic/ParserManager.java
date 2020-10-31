@@ -44,8 +44,7 @@ public class ParserManager {
      * @throws ParseException when the command word is invalid.
      */
     public FeatureParser select(String commandWord) throws ParseException {
-        if (commandWord.contains("module") || commandWord.contains("undo") || commandWord.contains("redo")
-                || commandWord.contains("cap") || commandWord.contains("zoom")) {
+        if (containsModuleListCommandWords(commandWord)) {
             return this.moduleListParser;
         } else if (commandWord.contains("task")) {
             return this.todoListParser;
@@ -58,5 +57,13 @@ public class ParserManager {
         } else {
             throw new ParseException("Does not recognise command type!");
         }
+    }
+
+    /**
+     * Returns true if command word contains ModuleList related command words
+     */
+    private boolean containsModuleListCommandWords(String commandWord) {
+        return commandWord.contains("module") || commandWord.contains("undo") || commandWord.contains("redo")
+                || commandWord.contains("cap") || commandWord.contains("zoom") || commandWord.contains("archive");
     }
 }

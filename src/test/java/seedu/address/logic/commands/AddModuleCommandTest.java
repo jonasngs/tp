@@ -88,7 +88,6 @@ public class AddModuleCommandTest {
      * A default model stub that have all of the methods failing.
      */
     private class ModelStub implements Model {
-
         @Override
         public void setUserPrefs(ReadOnlyUserPrefs userPrefs) {
             throw new AssertionError("This method should not be called.");
@@ -358,6 +357,70 @@ public class AddModuleCommandTest {
         }
         @Override
         public void redo() {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override
+        public void setArchivedModuleList(ReadOnlyModuleList readOnlyArchivedModuleList) {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override
+        public ModuleList getArchivedModuleList() {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override
+        public boolean hasArchivedModule(Module module) {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override
+        public void deleteArchivedModule(Module target) {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override
+        public void addArchivedModule(Module module) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setArchivedModule(Module module, Module editedModule) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void archiveModule(Module target) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void unarchiveModule(Module target) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void displayArchivedModules() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void displayNonArchivedModules() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList getFilteredArchivedModuleList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ObservableList getFilteredUnarchivedModuleList() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void updateFilteredArchivedModuleList(Predicate<Module> predicate) {
+            throw new AssertionError("This method should not be called.");
+        }
+        @Override
+        public boolean getModuleListDisplay() {
             throw new AssertionError("This method should not be called.");
         }
     }

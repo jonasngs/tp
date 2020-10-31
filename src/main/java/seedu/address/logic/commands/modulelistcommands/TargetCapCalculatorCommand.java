@@ -18,6 +18,8 @@ public class TargetCapCalculatorCommand extends Command {
     public static final String COMMAND_WORD = "targetcap";
     public static final String MESSAGE_CONSTRAINTS =
             "Unable to calculate CAP details because you do not have any completed mods";
+    public static final String MESSAGE_NO_PLANNED_MODULAR_CREDITS_CONSTRAINT =
+            "Unable to calculate CAP details because you do not have any planned modular credits";
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Determines CAP needed for ongoing modules for user to reach specified target CAP. "
             + "Parameters: "
@@ -62,6 +64,9 @@ public class TargetCapCalculatorCommand extends Command {
             throw new CapCalculationException(MESSAGE_CONSTRAINTS);
         }
         double plannedCredits = getPlannedCredits(modules);
+        if (plannedCredits == 0) {
+            throw new CapCalculationException(MESSAGE_NO_PLANNED_MODULAR_CREDITS_CONSTRAINT);
+        }
         double completedCredits = getCompletedCredits(modules);
         double totalCredits = plannedCredits + completedCredits;
         double capNeeded = (targetCap - (currentCap * (completedCredits / totalCredits)))

@@ -15,6 +15,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 // import seedu.address.model.contact.Contact;
 import seedu.address.model.module.ModularCredits;
 import seedu.address.model.module.Module;
+import seedu.address.model.module.ModuleLesson;
 import seedu.address.model.module.ModuleName;
 import seedu.address.model.module.ZoomLink;
 import seedu.address.model.module.grade.GradeTracker;
@@ -62,7 +63,8 @@ class JsonAdaptedModule {
      */
     public JsonAdaptedModule(Module source) {
         name = source.getName().fullName;
-        source.getAllLinks().forEach((lesson, link) -> zoomLinks.add(new JsonAdaptedZoomLink(lesson, link.getLink())));
+        source.getAllLinks().forEach((lesson, link) -> zoomLinks.add(new JsonAdaptedZoomLink(lesson.getLesson(),
+                link.getLink())));
         gradeTracker = new JsonAdaptedGradeTracker(source.getGradeTracker());
         tagged.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
@@ -98,9 +100,11 @@ class JsonAdaptedModule {
 
         // =========================== ZoomLink =============================== //
 
-        final Map<String, ZoomLink> modelZoomLinks = new HashMap<>();
+        final Map<ModuleLesson, ZoomLink> modelZoomLinks = new HashMap<>();
         for (JsonAdaptedZoomLink link : zoomLinks) {
-            modelZoomLinks.put(link.getKey(), link.toModelType());
+            ModuleLesson lesson = new ModuleLesson(link.getLesson());
+            ZoomLink zoomLink = link.toModelType();
+            modelZoomLinks.put(lesson, zoomLink);
         }
 
         // ========================= GradeTracker ============================= //

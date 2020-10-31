@@ -8,12 +8,7 @@ import javafx.collections.ObservableList;
 import seedu.address.model.module.Module;
 import seedu.address.model.module.UniqueModuleList;
 
-/**
- * Wraps all data at the module-list level
- * Duplicates are not allowed (by .isSameModule comparison)
- */
-public class ModuleList implements ReadOnlyModuleList {
-
+public class ArchivedModuleList implements ReadOnlyModuleList {
     private final UniqueModuleList modules;
 
     /*
@@ -27,12 +22,12 @@ public class ModuleList implements ReadOnlyModuleList {
         modules = new UniqueModuleList();
     }
 
-    public ModuleList() {}
+    public ArchivedModuleList() {}
 
     /**
      * Creates a ModuleList using the Modules in the {@code toBeCopied}
      */
-    public ModuleList(ReadOnlyModuleList toBeCopied) {
+    public ArchivedModuleList(ReadOnlyModuleList toBeCopied) {
         this();
         resetData(toBeCopied);
     }
@@ -107,7 +102,7 @@ public class ModuleList implements ReadOnlyModuleList {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof ModuleList // instanceof handles nulls
-                && modules.equals(((ModuleList) other).modules));
+                && modules.equals(((ArchivedModuleList) other).modules));
     }
 
     @Override

@@ -1,18 +1,19 @@
-package seedu.address.logic.commands;
+package seedu.address.logic.commands.modulelistcommands;
 
 import static java.util.Objects.requireNonNull;
 
+import seedu.address.logic.commands.Command;
+import seedu.address.logic.commands.CommandResult;
 import seedu.address.model.Model;
 import seedu.address.model.ModuleList;
 
 /**
- * Clears the address book.
+ * Clears the module list.
  */
-public class ClearCommand extends Command {
+public class ClearModuleCommand extends Command {
 
-    public static final String COMMAND_WORD = "clear";
+    public static final String COMMAND_WORD = "clearmodule";
     public static final String MESSAGE_SUCCESS = "Module list has been cleared!";
-
 
     @Override
     public CommandResult execute(Model model) {

@@ -23,7 +23,7 @@ public class VersionedContactList extends ContactList {
     /**
      * Saves the current contact list state in history.
      */
-    public void commit(ContactList contactList) {
+    public void commit(ReadOnlyContactList contactList) {
         contactListStateList.subList(this.currentStatePointer + 1, contactListStateList.size()).clear();
         contactListStateList.add(new ContactList(contactList));
         this.currentStatePointer += 1;

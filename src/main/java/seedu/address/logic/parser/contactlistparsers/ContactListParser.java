@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.contactlistcommands.AddContactCommand;
+import seedu.address.logic.commands.contactlistcommands.ClearContactCommand;
 import seedu.address.logic.commands.contactlistcommands.DeleteContactCommand;
 import seedu.address.logic.commands.contactlistcommands.EditContactCommand;
 import seedu.address.logic.commands.contactlistcommands.FindContactCommand;
@@ -54,8 +55,8 @@ public class ContactListParser implements FeatureParser {
         case DeleteContactCommand.COMMAND_WORD:
             return new DeleteContactParser().parse(arguments);
 
-        //case ClearCommand.COMMAND_WORD:
-            //return new ClearCommand();
+        case ClearContactCommand.COMMAND_WORD:
+            return new ClearContactCommand();
 
         case FindContactCommand.COMMAND_WORD:
             return new FindContactParser().parse(arguments);

@@ -114,6 +114,73 @@ public interface Model {
      * Restores the previously undone module list state from history.
      */
     void redoModuleList() throws VersionedListException;
+
+    /**
+     * Replaces archived module list data with the data in {@code modulelist}.
+     */
+    void setArchivedModuleList(ReadOnlyModuleList moduleList);
+
+    /** Returns the archived ModuleList */
+    ReadOnlyModuleList getArchivedModuleList();
+
+    /**
+     * Returns true if a module with the same identity as {@code module} exists in the archived module list.
+     */
+    boolean hasArchivedModule(Module module);
+
+    /**
+     * Deletes the given module.
+     * The module must exist in the archived module list.
+     */
+    void deleteArchivedModule(Module target);
+    /**
+     * Adds the given module to the archived module list.
+     * {@code module} must not already exist in the archived module list.
+     */
+    void addArchivedModule(Module module);
+
+    /**
+     * Replaces the given module {@code target} with {@code editedModule}.
+     * {@code target} must exist in the archived module list.
+     * The module identity of {@code editedModule} must not be the same as another existing module in the module.
+     */
+    void setArchivedModule(Module target, Module editedModule);
+
+    /**
+     * Moves the given module in the module list into the archived module list
+     * {@code target} must exist in the module list.
+     * {@code module} must not already exist in the archived module list.
+     */
+    void archiveModule(Module target);
+
+    /**
+     * Moves the given module in the archived module list into the module list
+     * {@code target} must exist in the module list.
+     * {@code module} must not already exist in the archived module list.
+     */
+    void unarchiveModule(Module target);
+
+    /**
+     * Sets module list to display the archived module list
+     */
+    void displayArchivedModules();
+
+    /**
+     * Sets module list to display the non-archived module list
+     */
+    void displayNonArchivedModules();
+
+    /** Returns an unmodifiable view of the filtered archived module list */
+    ObservableList<Module> getFilteredArchivedModuleList();
+
+    /** Returns an unmodifiable view of the filtered module list */
+    ObservableList<Module> getFilteredUnarchivedModuleList();
+
+    /**
+     * Updates the filter of the filtered archived module list to filter by the given {@code predicate}.
+     * @throws NullPointerException if {@code predicate} is null.
+     */
+    void updateFilteredArchivedModuleList(Predicate<Module> predicate);
     // ============================ ContactList ==================================================
 
     /**
@@ -316,4 +383,9 @@ public interface Model {
      * Restores the previously undone CAP5Buddy state from history.
      */
     void redo() throws VersionedListException;
+
+    /**
+     * Returns true if archived module list is being displayed
+     */
+    boolean getModuleListDisplay();
 }

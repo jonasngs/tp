@@ -15,6 +15,7 @@ public class UserPrefs implements ReadOnlyUserPrefs {
 
     private GuiSettings guiSettings = new GuiSettings();
     private Path moduleListFilePath = Paths.get("data" , "moduleList.json");
+    private Path archivedModuleListFilePath = Paths.get("data/archive" , "archivedModuleList.json");
     private Path contactListFilePath = Paths.get("data" , "contactList.json");
     private Path todoListFilePath = Paths.get("data" , "todoList.json");
     private Path eventListFilePath = Paths.get("data", "eventList.json");
@@ -38,8 +39,11 @@ public class UserPrefs implements ReadOnlyUserPrefs {
     public void resetData(ReadOnlyUserPrefs newUserPrefs) {
         requireNonNull(newUserPrefs);
         setGuiSettings(newUserPrefs.getGuiSettings());
+        //ModuleList
         setModuleListFilePath(newUserPrefs.getModuleListFilePath());
+        setArchivedModuleListFilePath(newUserPrefs.getArchivedModuleListFilePath());
         setContactListFilePath(newUserPrefs.getContactListFilePath());
+        setTodoListFilePath(newUserPrefs.getTodoListFilePath());
     }
 
     public GuiSettings getGuiSettings() {
@@ -50,9 +54,13 @@ public class UserPrefs implements ReadOnlyUserPrefs {
         requireNonNull(guiSettings);
         this.guiSettings = guiSettings;
     }
-
+    @Override
     public Path getModuleListFilePath() {
         return moduleListFilePath;
+    }
+    @Override
+    public Path getArchivedModuleListFilePath() {
+        return archivedModuleListFilePath;
     }
 
     public Path getContactListFilePath() {
@@ -70,6 +78,11 @@ public class UserPrefs implements ReadOnlyUserPrefs {
     public void setModuleListFilePath(Path moduleListFilePath) {
         requireNonNull(moduleListFilePath);
         this.moduleListFilePath = moduleListFilePath;
+    }
+
+    public void setArchivedModuleListFilePath(Path archivedModuleListFilePath) {
+        requireNonNull(archivedModuleListFilePath);
+        this.archivedModuleListFilePath = archivedModuleListFilePath;
     }
 
     public void setContactListFilePath(Path contactListFilePath) {

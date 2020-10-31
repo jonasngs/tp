@@ -22,7 +22,7 @@ public class VersionedModuleList extends ModuleList {
     /**
      * Saves the current module list state in history.
      */
-    public void commit(ModuleList moduleList) {
+    public void commit(ReadOnlyModuleList moduleList) {
         moduleListStateList.subList(this.currentStatePointer + 1, moduleListStateList.size()).clear();
         moduleListStateList.add(new ModuleList(moduleList));
         this.currentStatePointer += 1;
