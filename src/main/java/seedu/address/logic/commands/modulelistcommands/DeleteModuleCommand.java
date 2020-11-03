@@ -43,6 +43,7 @@ public class DeleteModuleCommand extends Command {
 
         Module moduleToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteModule(moduleToDelete);
+        model.commitModuleList();
         return new CommandResult(String.format(MESSAGE_DELETE_MODULE_SUCCESS, moduleToDelete));
     }
 

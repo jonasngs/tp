@@ -1,5 +1,7 @@
 package seedu.address.ui;
 
+import java.util.Comparator;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -17,7 +19,7 @@ public class ContactCard extends UiPart<Region> {
 
     public final Contact contact;
 
-    @javafx.fxml.FXML
+    @FXML
     private HBox cardPane;
     @FXML
     private Label name;
@@ -29,6 +31,8 @@ public class ContactCard extends UiPart<Region> {
     private Label telegram;
     @FXML
     private FlowPane tags;
+    @FXML
+    private Label isImportant;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -37,12 +41,18 @@ public class ContactCard extends UiPart<Region> {
         super(FXML);
         this.contact = contact;
         id.setText(displayedIndex + ". ");
-        name.setText(contact.getName().fullName);
+        name.setText(contact.getName().getName());
         email.setText(contact.getEmail().value);
-        telegram.setText(contact.getTelegramUsername().telegramUsername);
-        //contact.getTags().stream()
-        //        .sorted(Comparator.comparing(tag -> tag.tagName))
-        //        .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        isImportant.setText(contact.getIsImportantForUi());
+        if (contact.getTelegram().isPresent()) {
+            telegram.setText(contact.getTelegram().get().telegramUsername);
+        } else {
+            telegram.setText("No telegram");
+        }
+
+        contact.getTags().stream()
+                .sorted(Comparator.comparing(tag -> tag.tagName))
+                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
     }
 
     @Override

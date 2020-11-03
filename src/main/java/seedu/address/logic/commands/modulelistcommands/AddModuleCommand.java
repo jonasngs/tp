@@ -11,7 +11,7 @@ import seedu.address.model.Model;
 import seedu.address.model.module.Module;
 
 /**
- * Adds a person to the address book.
+ * Adds a module to the module list.
  */
 public class AddModuleCommand extends Command {
 
@@ -20,7 +20,6 @@ public class AddModuleCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a module to the module list. "
             + "Parameters: "
             + PREFIX_NAME + "NAME "
-            + PREFIX_ZOOM_LINK + "ZOOM LINK "
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "CS2100 "
             + PREFIX_ZOOM_LINK + "www.zoom.com";
@@ -28,37 +27,51 @@ public class AddModuleCommand extends Command {
     public static final String MESSAGE_SUCCESS = "New module added: %1$s";
     public static final String MESSAGE_DUPLICATE_MODULE = "This module already exists in the module list";
 
-    private final Module toAdd;
+    private final Module module;
 
     /**
      * Creates an AddCommand to add the specified {@code Module}
      */
     public AddModuleCommand(Module module) {
         requireNonNull(module);
-        toAdd = module;
+        this.module = module;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
 
-        if (model.hasModule(toAdd)) {
+        if (model.hasModule(module) || model.hasArchivedModule(module)) {
             throw new CommandException(MESSAGE_DUPLICATE_MODULE);
         }
 
-        model.addModule(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
+        model.addModule(module);
+        model.commitModuleList();
+        return new CommandResult(String.format(MESSAGE_SUCCESS, module));
     }
 
     @Override
     public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof AddModuleCommand // instanceof handles nulls
-                && toAdd.equals(((AddModuleCommand) other).toAdd));
+        if (other == this) {
+            return true;
+        } else if (other instanceof AddModuleCommand) {
+            AddModuleCommand temp = (AddModuleCommand) other;
+            Module temp2 = temp.module;
+            return this.module.getName().equals(temp2.getName())
+                    && this.module.getAllLinks().equals(temp2.getAllLinks())
+                    && this.module.getModularCredits().equals(temp2.getModularCredits());
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean isExit() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return COMMAND_WORD + " " + module.toString();
     }
 }

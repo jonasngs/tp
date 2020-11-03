@@ -97,7 +97,6 @@ public class ContactList implements ReadOnlyContactList {
     @Override
     public String toString() {
         return contacts.asUnmodifiableObservableList().size() + " contacts";
-        // TODO: refine later
     }
 
     @Override

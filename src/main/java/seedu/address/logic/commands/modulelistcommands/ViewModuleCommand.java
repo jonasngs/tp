@@ -1,19 +1,19 @@
 package seedu.address.logic.commands.modulelistcommands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
 import java.util.List;
 
+import seedu.address.commons.core.Messages;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.module.Module;
-import seedu.address.model.module.ModuleName;
 
 /**
- * Lists all persons in the address book to the user.
+ * Lists all modules in the module list to the user.
  */
 public class ViewModuleCommand extends Command {
 
@@ -23,18 +23,16 @@ public class ViewModuleCommand extends Command {
             + "%1$s";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Views a module in the module list. "
-            + "Parameters: "
-            + PREFIX_NAME + "NAME "
+            + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + "1";
-    public static final String MESSAGE_MODULE_NOT_FOUND = "The module requested cannot be found.";
 
-    private ModuleName moduleName;
+    private Index index;
+
     /**
-     * Creates an ViewCommand to view the specified {@code Module}
-     *
+     * Creates a ViewCommand to view the specified {@code Module}
      */
-    public ViewModuleCommand(ModuleName moduleName) {
-        this.moduleName = moduleName;
+    public ViewModuleCommand(Index index) {
+        this.index = index;
     }
 
     @Override
@@ -42,16 +40,13 @@ public class ViewModuleCommand extends Command {
         requireNonNull(model);
 
         List<Module> lastShownList = model.getFilteredModuleList();
-        Module moduleToView = null;
-        for (Module module : lastShownList) {
-            if (module.getName().equals(moduleName)) {
-                moduleToView = module;
-                break;
-            }
+
+        if (index.getZeroBased() >= lastShownList.size()) {
+            throw new CommandException(Messages.MESSAGE_INVALID_MODULE_DISPLAYED_INDEX);
         }
-        if (moduleToView == null) {
-            throw new CommandException(MESSAGE_MODULE_NOT_FOUND);
-        }
+
+        Module moduleToView = lastShownList.get(index.getZeroBased());
+
         return new CommandResult(String.format(MESSAGE_SUCCESS, moduleToView));
     }
 

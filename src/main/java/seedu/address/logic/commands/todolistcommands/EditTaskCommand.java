@@ -8,6 +8,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_TASKS;
 
 import java.util.List;
+import java.util.Set;
 
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
@@ -33,14 +34,15 @@ public class EditTaskCommand extends Command {
         + "Existing values will be overwritten by the input values.\n"
         + "Parameters: INDEX (must be a positive integer) "
         + "[" + PREFIX_NAME + "NAME] "
-        + "[" + PREFIX_TAG + "TAG] "
+        + "[" + PREFIX_TAG + "TAG (can be more than 1)] "
         + "[" + PREFIX_DATE + "DATE/DEADLINE] "
         + "[" + PREFIX_PRIORITY + "PRIORITY]...\n"
         + "Example: " + COMMAND_WORD + " 1 "
         + PREFIX_NAME + "read chapter 7\n"
-        + "NOTE : To update the status of the task you can use the complete command.";
+        + "NOTE : 1. To update the status of the task you can use the complete command.\n"
+        + "NOTE : 2. If tags are present, it will overwrite all of previous tags (editing tags is not cumulative)";
 
-    public static final String MESSAGE_EDIT_TASK_SUCCESS = "Edited task: %1$s";
+    public static final String MESSAGE_EDIT_TASK_SUCCESS = "Edited task: \n%1$s";
     public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
     public static final String MESSAGE_DUPLICATE_TASK = "This task already exists in the todo list.";
 
@@ -77,6 +79,7 @@ public class EditTaskCommand extends Command {
 
         model.setTask(taskToEdit, editedTask);
         model.updateFilteredTodoList(PREDICATE_SHOW_ALL_TASKS);
+        model.commitTodoList();
         return new CommandResult(String.format(MESSAGE_EDIT_TASK_SUCCESS, editedTask));
     }
 
@@ -92,21 +95,21 @@ public class EditTaskCommand extends Command {
 
         Task editedTask = new Task(name);
 
-        if (taskToEdit.getTag().isPresent() || editTaskDescriptor.getTag().isPresent()) {
-            Tag updatedTag = editTaskDescriptor.getTag()
-                    .orElse(taskToEdit.getTag().get());
-            editedTask = editedTask.setTag(updatedTag);
+        if (taskToEdit.getTags().isPresent() || editTaskDescriptor.getTags().isPresent()) {
+            Set<Tag> updatedTag = editTaskDescriptor.getTags()
+                    .orElseGet(() -> taskToEdit.getTags().get());
+            editedTask = editedTask.setTags(updatedTag);
         }
 
         if (taskToEdit.getPriority().isPresent() || editTaskDescriptor.getPriority().isPresent()) {
             Priority updatedPriority = editTaskDescriptor.getPriority()
-                    .orElse(taskToEdit.getPriority().get());
+                    .orElseGet(() -> taskToEdit.getPriority().get());
             editedTask = editedTask.setPriority(updatedPriority);
         }
 
         if (taskToEdit.getDate().isPresent() || editTaskDescriptor.getDate().isPresent()) {
             Date updatedDate = editTaskDescriptor.getDate()
-                    .orElse(taskToEdit.getDate().get());
+                    .orElseGet(() -> taskToEdit.getDate().get());
             editedTask = editedTask.setDate(updatedDate);
         }
 

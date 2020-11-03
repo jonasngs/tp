@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import seedu.address.model.contact.Contact;
+import seedu.address.model.contact.ContactName;
 import seedu.address.model.contact.Email;
-import seedu.address.model.contact.Name;
 import seedu.address.model.contact.Telegram;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.util.SampleDataUtil;
@@ -19,7 +19,7 @@ public class ContactBuilder {
     public static final String DEFAULT_EMAIL = "alice@gmail.com";
     public static final String DEFAULT_TELEGRAM = "@alice";
 
-    private Name name;
+    private ContactName name;
     private Email email;
     private Telegram telegram;
     private Set<Tag> tags;
@@ -28,7 +28,7 @@ public class ContactBuilder {
      * Creates a {@code PersonBuilder} with the default details.
      */
     public ContactBuilder() {
-        name = new Name(DEFAULT_NAME);
+        name = new ContactName(DEFAULT_NAME);
         email = new Email(DEFAULT_EMAIL);
         telegram = new Telegram(DEFAULT_TELEGRAM);
         tags = new HashSet<>();
@@ -40,7 +40,7 @@ public class ContactBuilder {
     public ContactBuilder(Contact personToCopy) {
         name = personToCopy.getName();
         email = personToCopy.getEmail();
-        telegram = personToCopy.getTelegramUsername();
+        telegram = personToCopy.getTelegram().get();
         tags = new HashSet<>(personToCopy.getTags());
     }
 
@@ -48,7 +48,7 @@ public class ContactBuilder {
      * Sets the {@code Name} of the {@code Contact} that we are building.
      */
     public ContactBuilder withName(String name) {
-        this.name = new Name(name);
+        this.name = new ContactName(name);
         return this;
     }
 
@@ -77,7 +77,7 @@ public class ContactBuilder {
     }
 
     public Contact build() {
-        return new Contact(name, email, telegram);
+        return new Contact(name, email, telegram, tags, false);
     }
 
 }

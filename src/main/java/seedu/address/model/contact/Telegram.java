@@ -1,5 +1,8 @@
 package seedu.address.model.contact;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.AppUtil.checkArgument;
+
 /**
  * Represents a Contact's telegram in the contact list.
  * Guarantees: immutable; is valid as declared in {@link #isValidTelegram(String)}
@@ -7,8 +10,11 @@ package seedu.address.model.contact;
 public class Telegram {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Telegram username should be at least 5 characters long and should only contain "
-                    + "alphanumeric characters and underscore, and it should not be blank";
+            "Telegram username should adhere to the following requirements: \n"
+                    + "1. Start with the \"@\" symbol\n"
+                    + "2. Contain at least 5 characters not including the \"@\" symbol \n"
+                    + "3. Contain only alphanumeric characters and underscore \n"
+                    + "4. Should not be blank";
 
     /**
      * Constraints for a telegram username as specified by the Telegram application.
@@ -16,7 +22,7 @@ public class Telegram {
     public static final String USERNAME_REGEX = "[a-zA-Z0-9_]{5,}";
     public static final String VALIDATION_REGEX = "@" + USERNAME_REGEX;
 
-    /** Telegram username. */
+    /** String containing the telegram username. */
     public final String telegramUsername;
 
     /**
@@ -25,6 +31,8 @@ public class Telegram {
      * @param telegramUsername Telegram username.
      */
     public Telegram(String telegramUsername) {
+        requireNonNull(telegramUsername);
+        checkArgument(isValidTelegram(telegramUsername), MESSAGE_CONSTRAINTS);
         this.telegramUsername = telegramUsername;
     }
 

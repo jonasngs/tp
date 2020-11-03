@@ -31,4 +31,10 @@ public class DeleteModuleParserTest {
         assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 DeleteModuleCommand.MESSAGE_USAGE));
     }
+
+    @Test
+    public void parse_missingIndexField_throwsParseException() {
+        assertParseFailure(parser, "", String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                DeleteModuleCommand.MESSAGE_USAGE));
+    }
 }

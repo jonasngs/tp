@@ -1,34 +1,48 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.EMAIL_DESC_BOB;
-//import static seedu.address.logic.commands.CommandTestUtil.INVALID_EMAIL_DESC;
-//import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
-//import static seedu.address.logic.commands.CommandTestUtil.INVALID_TAG_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.NAME_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_FRIEND;
-import static seedu.address.logic.commands.CommandTestUtil.TAG_DESC_HUSBAND;
-//import static seedu.address.logic.commands.CommandTestUtil.VALID_ADDRESS_AMY;
-//import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_AMY;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_GRADEPOINT_4;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_MC_4;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_MODULENAME_ES2660;
+import static seedu.address.logic.commands.CommandTestUtil.VALID_TAG_LECTURE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_GRADE_POINT;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_MODULAR_CREDITS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-//import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
-import static seedu.address.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
+import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
+import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.modulelistcommands.EditModuleCommand;
+import seedu.address.logic.commands.modulelistcommands.EditModuleDescriptor;
 import seedu.address.logic.parser.modulelistparsers.EditModuleParser;
-//import seedu.address.model.person.Email;
-//import seedu.address.model.person.Name;
-//import seedu.address.model.tag.Tag;
+import seedu.address.model.module.ModularCredits;
+import seedu.address.model.module.ModuleName;
+import seedu.address.model.module.grade.GradePoint;
+import seedu.address.model.tag.Tag;
+import seedu.address.testutil.EditModuleDescriptorBuilder;
 
 public class EditModuleParserTest {
+    private static final int INDEX = 1;
+    private static final String VALID_INPUT_EDIT_NAME = " " + INDEX
+            + " " + PREFIX_NAME + VALID_MODULENAME_ES2660;
 
-    private static final String TAG_EMPTY = " " + PREFIX_TAG;
+    private static final String VALID_INPUT_EDIT_TAG = " " + INDEX
+            + " " + PREFIX_TAG + VALID_TAG_LECTURE;
+
+    private static final String VALID_INPUT_EDIT_GRADEPOINT = " " + INDEX
+            + " " + PREFIX_GRADE_POINT + VALID_GRADEPOINT_4;
+
+    private static final String VALID_INPUT_EDIT_MC = " " + INDEX
+            + " " + PREFIX_MODULAR_CREDITS + VALID_MC_4;
+
+    private static final String VALID_INPUT_ALL_FIELDS = " " + INDEX
+            + " " + PREFIX_NAME + VALID_MODULENAME_ES2660
+            + " " + PREFIX_TAG + VALID_TAG_LECTURE
+            + " " + PREFIX_MODULAR_CREDITS + VALID_GRADEPOINT_4
+            + " " + PREFIX_MODULAR_CREDITS + VALID_MC_4;
 
     private static final String MESSAGE_INVALID_FORMAT =
             String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditModuleCommand.MESSAGE_USAGE);
@@ -36,135 +50,115 @@ public class EditModuleParserTest {
     private EditModuleParser parser = new EditModuleParser();
 
     @Test
-    public void parse_missingParts_failure() {
-        // no index specified
-        //assertParseFailure(parser, VALID_NAME_AMY, MESSAGE_INVALID_FORMAT);
-
-        // no field specified
-        //assertParseFailure(parser, "1", EditCommand.MESSAGE_NOT_EDITED);
-
-        // no index and no field specified
-        //assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);
-    }
-
-    @Test
-    public void parse_invalidPreamble_failure() {
-        // negative index
-        //assertParseFailure(parser, "-5" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
-
-        // zero index
-        //assertParseFailure(parser, "0" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
-
-        // invalid arguments being parsed as preamble
-        //assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_FORMAT);
-
-        // invalid prefix being parsed as preamble
-        //assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_FORMAT);
-    }
-
-    @Test
-    public void parse_invalidValue_failure() {
-        //assertParseFailure(parser, "1" + INVALID_NAME_DESC, Name.MESSAGE_CONSTRAINTS); // invalid name
-        //assertParseFailure(parser, "1" + INVALID_EMAIL_DESC, Email.MESSAGE_CONSTRAINTS); // invalid email
-        //assertParseFailure(parser, "1" + INVALID_TAG_DESC, Tag.MESSAGE_CONSTRAINTS); // invalid tag
-
-        // while parsing {@code PREFIX_TAG} alone will reset the tags of the {@code Person} being edited,
-        // parsing it together with a valid tag results in error
-        //assertParseFailure(parser, "1" + TAG_DESC_FRIEND + TAG_DESC_HUSBAND + TAG_EMPTY, Tag.MESSAGE_CONSTRAINTS);
-        //assertParseFailure(parser, "1" + TAG_DESC_FRIEND + TAG_EMPTY + TAG_DESC_HUSBAND, Tag.MESSAGE_CONSTRAINTS);
-        //assertParseFailure(parser, "1" + TAG_EMPTY + TAG_DESC_FRIEND + TAG_DESC_HUSBAND, Tag.MESSAGE_CONSTRAINTS);
-
-        // multiple invalid values, but only the first invalid value is captured
-        //assertParseFailure(parser, "1" + INVALID_NAME_DESC + INVALID_EMAIL_DESC + VALID_ADDRESS_AMY,
-        //        Name.MESSAGE_CONSTRAINTS);
-    }
-
-    @Test
     public void parse_allFieldsSpecified_success() {
-        Index targetIndex = INDEX_SECOND_PERSON;
-        String userInput = targetIndex.getOneBased() + TAG_DESC_HUSBAND
-                + EMAIL_DESC_AMY + NAME_DESC_AMY + TAG_DESC_FRIEND;
-
-        //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
-        //.withEmail(VALID_EMAIL_AMY).withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
-        //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
-
-        //assertParseSuccess(parser, userInput, expectedCommand);
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withName(VALID_MODULENAME_ES2660)
+                .withGradePoint(VALID_GRADEPOINT_4).withMc(VALID_MC_4).withTags(VALID_TAG_LECTURE).build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, VALID_INPUT_ALL_FIELDS, expectedCommand);
     }
 
     @Test
-    public void parse_someFieldsSpecified_success() {
-        Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY;
-
-        //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
-        //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
-
-        //assertParseSuccess(parser, userInput, expectedCommand);
+    public void parse_onlyNameSpecified_success() {
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withName(VALID_MODULENAME_ES2660).build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, VALID_INPUT_EDIT_NAME, expectedCommand);
     }
 
     @Test
-    public void parse_oneFieldSpecified_success() {
-        // name
-        Index targetIndex = INDEX_THIRD_PERSON;
-        String userInput = targetIndex.getOneBased() + NAME_DESC_AMY;
-        //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY).build();
-        //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
-        //assertParseSuccess(parser, userInput, expectedCommand);
+    public void parse_onlyTagSpecified_success() {
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withTags(VALID_TAG_LECTURE).build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, VALID_INPUT_EDIT_TAG, expectedCommand);
+    }
 
-        // email
-        userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY;
-        //descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_AMY).build();
-        //expectedCommand = new EditCommand(targetIndex, descriptor);
-        //assertParseSuccess(parser, userInput, expectedCommand);
+    @Test
+    public void parse_onlyGradePointSpecified_success() {
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withGradePoint(VALID_GRADEPOINT_4).build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, VALID_INPUT_EDIT_GRADEPOINT, expectedCommand);
+    }
 
-        // tags
-        userInput = targetIndex.getOneBased() + TAG_DESC_FRIEND;
-        //descriptor = new EditPersonDescriptorBuilder().withTags(VALID_TAG_FRIEND).build();
-        //expectedCommand = new EditCommand(targetIndex, descriptor);
-        //assertParseSuccess(parser, userInput, expectedCommand);
+    @Test
+    public void parse_onlyMcSpecified_success() {
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withMc(VALID_MC_4).build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, VALID_INPUT_EDIT_MC, expectedCommand);
     }
 
     @Test
     public void parse_multipleRepeatedFields_acceptsLast() {
-        Index targetIndex = INDEX_FIRST_PERSON;
-        String userInput = targetIndex.getOneBased() + EMAIL_DESC_AMY
-                + TAG_DESC_FRIEND + EMAIL_DESC_AMY + TAG_DESC_FRIEND
-                + EMAIL_DESC_BOB + TAG_DESC_HUSBAND;
-
-        //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_BOB)
-        //.withTags(VALID_TAG_FRIEND, VALID_TAG_HUSBAND)
-        //.build();
-        //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
-
-        //assertParseSuccess(parser, userInput, expectedCommand);
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withName(VALID_MODULENAME_ES2660)
+                .build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, VALID_INPUT_EDIT_NAME, expectedCommand);
     }
 
     @Test
     public void parse_invalidValueFollowedByValidValue_success() {
-        // no other valid values specified
-        Index targetIndex = INDEX_FIRST_PERSON;
-        // String userInput = targetIndex.getOneBased();
-        //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().build();
-        //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
-        // assertParseSuccess(parser, userInput, expectedCommand);
-
-        // other valid values specified
-        // userInput = targetIndex.getOneBased() + EMAIL_DESC_BOB;
-        //descriptor = new EditPersonDescriptorBuilder().withEmail(VALID_EMAIL_BOB)
-        //.build();
-        //expectedCommand = new EditCommand(targetIndex, descriptor);
-        // assertParseSuccess(parser, userInput, expectedCommand);
+        String invalidThenValid = " " + 1
+                + " " + PREFIX_NAME + "@123"
+                + " " + PREFIX_NAME + VALID_MODULENAME_ES2660;
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withName(VALID_MODULENAME_ES2660).build();
+        EditModuleCommand expectedCommand = new EditModuleCommand(Index.fromOneBased(1), descriptor);
+        assertParseSuccess(parser, invalidThenValid, expectedCommand);
     }
 
     @Test
-    public void parse_resetTags_success() {
-        Index targetIndex = INDEX_THIRD_PERSON;
-        String userInput = targetIndex.getOneBased() + TAG_EMPTY;
+    public void parse_missingIndex_failure() {
+        String missingIndex = " " + PREFIX_NAME + VALID_MODULENAME_ES2660;
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withName(VALID_MODULENAME_ES2660).build();
+        assertParseFailure(parser, missingIndex, MESSAGE_INVALID_FORMAT);
+    }
 
-        //EditModuleDescriptor descriptor = new EditPersonDescriptorBuilder().withTags().build();
-        //EditCommand expectedCommand = new EditCommand(targetIndex, descriptor);
+    @Test
+    public void parse_missingAllFields_failure() {
+        String missingFields = " ";
+        EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().build();
+        assertParseFailure(parser, missingFields, MESSAGE_INVALID_FORMAT);
+    }
 
-        //assertParseSuccess(parser, userInput, expectedCommand);
+    @Test
+    public void parse_invalidIndex_failure() {
+        //String invalidIndex = " " + 100
+        //        + " " + PREFIX_NAME + VALID_MODULENAME_ES2660;
+        //EditModuleDescriptor descriptor = new EditModuleDescriptorBuilder().withName(VALID_MODULENAME_ES2660).build();
+        //assertParseFailure(parser, invalidIndex, MESSAGE_INVALID_INDEX);
+    }
+
+    @Test
+    public void parse_invalidName_failure() {
+        String invalidName = " " + 1
+                + " " + PREFIX_NAME + "@123";
+        assertParseFailure(parser, invalidName, ModuleName.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_invalidTag_failure() {
+        String invalidTag = " " + 1
+                + " " + PREFIX_TAG + "@@@@";
+        assertParseFailure(parser, invalidTag, Tag.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_invalidGradePoint_failure() {
+        String invalidGradePoint = " " + 1
+                + " " + PREFIX_GRADE_POINT + "10";
+        assertParseFailure(parser, invalidGradePoint, GradePoint.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_invalidMC_failure() {
+        String invalidMC = " " + 1
+                + " " + PREFIX_MODULAR_CREDITS + "aa";
+        assertParseFailure(parser, invalidMC, ModularCredits.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_multipleInvalidFields_failure() {
+        String invalidMC = " " + 1
+                + " " + PREFIX_NAME + "2020CS"
+                + " " + PREFIX_MODULAR_CREDITS + "aa";
+        //shows error message of name because name takes priority over modular credits.
+        assertParseFailure(parser, invalidMC, ModuleName.MESSAGE_CONSTRAINTS);
     }
 }

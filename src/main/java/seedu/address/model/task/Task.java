@@ -2,7 +2,10 @@ package seedu.address.model.task;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import seedu.address.model.tag.Tag;
 
@@ -12,7 +15,7 @@ import seedu.address.model.tag.Tag;
  */
 public class Task {
     private final TaskName name;
-    private final Tag tag;
+    private final Set<Tag> tags = new HashSet<>();
     private final Priority priority;
     private final Date date;
     private final Status status;
@@ -23,27 +26,26 @@ public class Task {
      * @param name name of the task
      */
     public Task(TaskName name) {
-        requireNonNull(name);
+        assert name != null;
         this.name = name;
-        this.tag = null;
         this.priority = null;
         this.date = null;
-        this.status = null;
+        this.status = Status.NOT_COMPLETED;
     }
 
     /**
      * Constructor to support immutability.
      *
      * @param name name of the task
-     * @param tag tags related to the task
+     * @param tags tags related to the task
      * @param priority priority of the task
      * @param date date of the task
      * @param status status of the task
      */
-    public Task(TaskName name, Tag tag, Priority priority, Date date, Status status) {
+    public Task(TaskName name, Set<Tag> tags, Priority priority, Date date, Status status) {
         requireNonNull(name);
         this.name = name;
-        this.tag = tag;
+        this.tags.addAll(tags);
         this.priority = priority;
         this.date = date;
         this.status = status;
@@ -54,15 +56,15 @@ public class Task {
     }
 
     public Task setName(TaskName name) {
-        return new Task(name, this.tag, this.priority, this.date, this.status);
+        return new Task(name, this.tags, this.priority, this.date, this.status);
     }
 
-    public Optional<Tag> getTag() {
-        return Optional.ofNullable(this.tag);
+    public Optional<Set<Tag>> getTags() {
+        return Optional.of(this.tags).map(Collections::unmodifiableSet);
     }
 
-    public Task setTag(Tag tag) {
-        return new Task(this.name, tag, this.priority, this.date, this.status);
+    public Task setTags(Set<Tag> tags) {
+        return new Task(this.name, tags, this.priority, this.date, this.status);
     }
 
     public Optional<Priority> getPriority() {
@@ -70,7 +72,7 @@ public class Task {
     }
 
     public Task setPriority(Priority priority) {
-        return new Task(this.name, this.tag, priority, this.date, this.status);
+        return new Task(this.name, this.tags, priority, this.date, this.status);
     }
 
     public Optional<Date> getDate() {
@@ -78,15 +80,16 @@ public class Task {
     }
 
     public Task setDate(Date date) {
-        return new Task(this.name, this.tag, this.priority, date, this.status);
+        return new Task(this.name, this.tags, this.priority, date, this.status);
     }
 
     public Optional<Status> getStatus() {
-        return Optional.ofNullable(this.status);
+        assert this.status != null;
+        return Optional.of(this.status);
     }
 
     public Task setStatus(Status status) {
-        return new Task(this.name, this.tag, this.priority, this.date, status);
+        return new Task(this.name, this.tags, this.priority, this.date, status);
     }
 
     /**
@@ -132,9 +135,9 @@ public class Task {
      * @param tag the specified tag
      * @return true if this task has the specified tag(s)
      */
-    public boolean hasSameTag(Tag tag) {
-        requireNonNull(this.tag);
-        return this.tag.equals(tag);
+    public boolean hasSameTag(Set<Tag> tag) {
+        requireNonNull(this.tags);
+        return this.tags.equals(tag);
     }
 
     /**
@@ -156,10 +159,71 @@ public class Task {
 
         Task otherTask = (Task) other;
         return otherTask.getName().equals(getName())
-            && otherTask.getTag().equals(getTag())
+            && otherTask.getTags().equals(getTags())
             && otherTask.getPriority().equals(getPriority())
             && otherTask.getDate().equals(getDate())
             && otherTask.getStatus().equals(getStatus());
+    }
+
+    /**
+     * Returns string representing of the name of the task for the UI.
+     *
+     * @return string to be displayed in the UI.
+     */
+    public String getNameForUi() {
+        assert this.name != null;
+        return this.name.toString();
+    }
+
+    /**
+     * Returns a set representing of the tags of the task for the UI.
+     *
+     * @return set of tags to be displayed in the UI.
+     */
+    public Set<Tag> getTagsForUi() {
+        if (this.tags == null) {
+            HashSet<Tag> defaultTags = new HashSet<>();
+            defaultTags.add(new Tag("TagNotProvided"));
+            return defaultTags;
+        } else {
+            return this.tags;
+        }
+    }
+
+    /**
+     * Returns string representing of the priority of the task for the UI.
+     *
+     * @return string to be displayed in the UI.
+     */
+    public String getPriorityForUi() {
+        if (this.priority == null) {
+            return "Priority not provided";
+        } else {
+            return this.priority.toString();
+        }
+    }
+
+    /**
+     * Returns string representing of the date of the task for the UI.
+     *
+     * @return string to be displayed in the UI.
+     */
+    public String getDateForUi() {
+        if (this.date == null) {
+            return "Date not provided";
+        } else {
+            return this.date.toString();
+        }
+    }
+
+    /**
+     * Returns string representing of the status of the task for the UI.
+     *
+     * @return string to be displayed in the UI.
+     */
+    public String getStatusForUi() {
+        assert this.status != null;
+        return this.status.toString();
     }
 
     @Override
@@ -167,19 +231,20 @@ public class Task {
         final StringBuilder builder = new StringBuilder();
         builder
                 .append(" *Name: ")
-                .append(getName())
+                .append(getName().isPresent() ? getName().get() : "")
                 .append("\n")
                 .append(" *Tag: ")
-                .append(getTag())
+                //.append(getTags().isPresent() ? getTags().get() : "")
+                .append(getTags().isPresent() ? getTags().get() : "")
                 .append("\n")
                 .append(" *Priority: ")
-                .append(getPriority())
+                .append(getPriority().isPresent() ? getPriority().get() : "")
                 .append("\n")
                 .append(" *Date: ")
-                .append(getDate())
+                .append(getDate().isPresent() ? getDate().get() : "")
                 .append("\n")
-                .append("Status: ")
-                .append(getStatus())
+                .append(" *Status: ")
+                .append(getStatus().isPresent() ? getStatus().get() : "")
                 .append("\n");
         return builder.toString();
     }

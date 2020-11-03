@@ -19,21 +19,21 @@ import seedu.address.model.task.Task;
  */
 public class AddTaskCommand extends Command {
 
-    public static final String COMMAND_WORD = "addtodo";
+    public static final String COMMAND_WORD = "addtask";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a task to the todo list. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a task to the todo list. \n"
         + "Parameters: "
         + PREFIX_NAME + "TASK NAME "
         + PREFIX_TAG + "TAG [OPTIONAL] "
         + PREFIX_PRIORITY + "PRIORITY [OPTIONAL] "
-        + PREFIX_DATE + "DATE/DEADLINE [OPTIONAL] "
+        + PREFIX_DATE + "DATE/DEADLINE [OPTIONAL] \n"
         + "Example: " + COMMAND_WORD + " "
         + PREFIX_NAME + "Do Lab Sheet 1 "
         + PREFIX_TAG + "LAB "
         + PREFIX_PRIORITY + "HIGH "
         + PREFIX_DATE + "2020-10-16 ";
 
-    public static final String MESSAGE_SUCCESS = "New task added: %1$s";
+    public static final String MESSAGE_SUCCESS = "New task added: \n%1$s";
     public static final String MESSAGE_DUPLICATE_TASK = "This task already exists in the todo list";
 
     private final Logger logger = LogsCenter.getLogger(AddTaskCommand.class);
@@ -62,6 +62,7 @@ public class AddTaskCommand extends Command {
 
         logger.info("Adding task to the list.");
         model.addTask(toAdd);
+        model.commitTodoList();
         return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
     }
 

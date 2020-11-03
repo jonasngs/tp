@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.module.grade.Grade;
+import seedu.address.model.module.grade.GradePoint;
 import seedu.address.model.module.grade.GradeTracker;
 
 /**
@@ -20,17 +21,19 @@ public class JsonAdaptedGradeTracker {
 
     private final List<JsonAdaptedAssignment> assignments = new ArrayList<>();
     private final double grade;
-
+    //private final Optional<GradePoint> gradePoint;
+    private final String gradePoint;
     /**
      * Constructs a {@code JsonAdaptedGradeTracker} with the given Grade Tracker details.
      */
     @JsonCreator
     public JsonAdaptedGradeTracker(@JsonProperty("assignments") List<JsonAdaptedAssignment> assignments,
-                             @JsonProperty("grade") double grade) {
+                             @JsonProperty("grade") double grade, @JsonProperty("gradepoint") String gradePoint) {
         this.grade = grade;
         if (assignments != null) {
             this.assignments.addAll(assignments);
         }
+        this.gradePoint = gradePoint;
     }
 
     /**
@@ -41,6 +44,12 @@ public class JsonAdaptedGradeTracker {
                 .map(JsonAdaptedAssignment::new)
                 .collect(Collectors.toList()));
         this.grade = source.getGrade().gradeResult;
+        assert source.getGradePoint() != null : "Assertion error, gradepoint not defined";
+        if (source.getGradePoint().isEmpty()) {
+            this.gradePoint = null;
+        } else {
+            this.gradePoint = source.getGradePoint().get().toString();
+        }
     }
 
     /**
@@ -51,7 +60,7 @@ public class JsonAdaptedGradeTracker {
     public GradeTracker toModelType() throws IllegalValueException {
         GradeTracker modelGradeTracker = new GradeTracker();
         for (JsonAdaptedAssignment assignment : assignments) {
-            if (!modelGradeTracker.isDuplicateAssignment(assignment.toModelType())) {
+            if (!modelGradeTracker.containsDuplicateAssignment(assignment.toModelType())) {
                 modelGradeTracker.addAssignment(assignment.toModelType());
             } else {
                 throw new IllegalValueException(GradeTracker.MESSAGE_DUPLICATE_ASSIGNMENT);
@@ -64,7 +73,16 @@ public class JsonAdaptedGradeTracker {
             throw new IllegalValueException(GradeTracker.MESSAGE_INVALID_GRADE);
         }
         final Grade modelGrade = new Grade(grade);
+        final GradePoint modelGradePoint;
+        if (gradePoint == null) {
+            modelGradePoint = null;
+        } else if (!GradePoint.isValidGradePoint(gradePoint)) {
+            throw new IllegalValueException(GradeTracker.MESSAGE_INVALID_GRADEPOINT);
+        } else {
+            modelGradePoint = new GradePoint(Double.parseDouble(gradePoint));
+        }
         modelGradeTracker.setGrade(modelGrade);
+        modelGradeTracker.setGradePoint(modelGradePoint);
         return modelGradeTracker;
     }
 }

@@ -4,67 +4,35 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
 /**
- * Represents a Module's Zoom Link in the Module List.
+ * Represents a Zoom Link for a module in the Module List.
  * Guarantees: immutable; is valid as declared in {@link #isValidZoomLink(String)}
  */
 public class ZoomLink {
 
-    public static final String MESSAGE_CONSTRAINTS = "Zoom links should be of the format www.zoom.com";
-    /*      + "and adhere to the following constraints:\n"
-            + "1. The local-part should only contain alphanumeric characters and these special characters, excluding "
-            + "the parentheses, (" + SPECIAL_CHARACTERS + ") .\n"
-            + "2. This is followed by a '@' and then a domain name. "
-            + "The domain name must:\n"
-            + "    - be at least 2 characters long\n"
-            + "    - start and end with alphanumeric characters\n"
-            + "    - consist of alphanumeric characters, a period or a hyphen for the characters in between, if any.";*/
+    public static final String MESSAGE_CONSTRAINTS = "Zoom links should belong to the NUS domain"
+            + " and adhere to the format: https://nus-sg.zoom.us/[path]";
+    public static final String ZOOM_LINK_DOMAIN = "https://nus-sg.zoom.us/";
+    public static final String ZOOM_LINK_PATH = "[a-zA-Z0-9?=/]+";
+    public static final String VALIDATION_REGEX = ZOOM_LINK_DOMAIN + ZOOM_LINK_PATH;
 
-    private static final String SPECIAL_CHARACTERS = "!#$%&'*+/=?`{|}~^.-";
-    // alphanumeric and special characters
-    private static final String LOCAL_PART_REGEX = "^[\\w" + SPECIAL_CHARACTERS + "]+";
-    private static final String DOMAIN_FIRST_CHARACTER_REGEX = "[^\\W_]"; // alphanumeric characters except underscore
-    private static final String DOMAIN_MIDDLE_REGEX = "[a-zA-Z0-9.-]*"; // alphanumeric, period and hyphen
-    private static final String DOMAIN_LAST_CHARACTER_REGEX = "[^\\W_]$";
-
-    public static final String VALIDATION_REGEX = LOCAL_PART_REGEX + "@"
-            + DOMAIN_FIRST_CHARACTER_REGEX + DOMAIN_MIDDLE_REGEX + DOMAIN_LAST_CHARACTER_REGEX;
-
-    public final String value;
+    private final String link;
 
     /**
-     * Constructs an {@code Email}.
+     * Constructs an {@code ZoomLink}.
      *
-     * @param zoomLink A valid email address.
+     * @param zoomLink A valid zoom link.
      */
     public ZoomLink(String zoomLink) {
         requireNonNull(zoomLink);
         checkArgument(isValidZoomLink(zoomLink), MESSAGE_CONSTRAINTS);
-        value = zoomLink;
+        link = zoomLink;
     }
 
     /**
-     * Returns if a given string is a valid email.
+     * Returns true if the given zoom link is a valid zoom link.
      */
-    public static boolean isValidZoomLink(String test) {
-        //return test.matches(VALIDATION_REGEX);
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof ZoomLink // instanceof handles nulls
-                && value.equals(((ZoomLink) other).value)); // state check
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
+    public static boolean isValidZoomLink(String zoomLink) {
+        return zoomLink.matches(VALIDATION_REGEX);
     }
 
     /**
@@ -72,7 +40,24 @@ public class ZoomLink {
      * @return String zoom link.
      */
     public String getLink() {
-        return this.value;
+        return this.link;
+    }
+
+    @Override
+    public String toString() {
+        return this.link;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other == this // short circuit if same object
+                || (other instanceof ZoomLink // instanceof handles nulls
+                && link.equals(((ZoomLink) other).link)); // state check
+    }
+
+    @Override
+    public int hashCode() {
+        return link.hashCode();
     }
 
 }

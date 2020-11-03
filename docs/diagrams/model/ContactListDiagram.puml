@@ -1,0 +1,17 @@
+@startuml
+!include ../style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor MODEL_COLOR
+skinparam classBackgroundColor MODEL_COLOR
+
+Interface ReadOnlyContactList <<Interface>>
+
+ContactList *-right-> "1" UniqueContactList
+ContactList .down.|> ReadOnlyContactList
+
+UniqueContactList o-right->"*" Contact
+
+Contact *-->"1" Name
+Contact *-->"1" Email
+Contact *-->"1" Telegram
+@enduml

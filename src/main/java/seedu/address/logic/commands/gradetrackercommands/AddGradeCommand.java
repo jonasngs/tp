@@ -5,12 +5,15 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_GRADE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.module.Module;
+import seedu.address.model.module.ModuleName;
 import seedu.address.model.module.grade.Grade;
 
 public class AddGradeCommand extends Command {
@@ -28,14 +31,17 @@ public class AddGradeCommand extends Command {
     public static final String MESSAGE_SUCCESS = "New grade %1$s added.";
     public static final String MESSAGE_GRADE_NOT_ADDED = "Module to add to not found.";
 
-    private final String moduleToAdd;
+    private final Logger logger = LogsCenter.getLogger(AddGradeCommand.class);
+
+    private final ModuleName moduleToAdd;
     private final Grade gradeToAdd;
 
     /**
      * Creates an AddAssignmentCommand to add the specified {@code Grade}
      */
-    public AddGradeCommand(String moduleToAdd, Grade grade) {
+    public AddGradeCommand(ModuleName moduleToAdd, Grade grade) {
         requireNonNull(grade);
+        logger.info("Adding a grade: " + grade.toString());
         this.moduleToAdd = moduleToAdd;
         this.gradeToAdd = grade;
     }
@@ -55,6 +61,8 @@ public class AddGradeCommand extends Command {
             throw new CommandException(MESSAGE_GRADE_NOT_ADDED);
         }
         module.addGrade(gradeToAdd);
+        logger.info("Grade has been added: " + gradeToAdd.toString());
+        model.commitModuleList();
         return new CommandResult(String.format(MESSAGE_SUCCESS, gradeToAdd));
     }
 

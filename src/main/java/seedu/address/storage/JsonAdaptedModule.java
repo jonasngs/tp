@@ -1,8 +1,10 @@
 package seedu.address.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +15,7 @@ import seedu.address.commons.exceptions.IllegalValueException;
 // import seedu.address.model.contact.Contact;
 import seedu.address.model.module.ModularCredits;
 import seedu.address.model.module.Module;
+import seedu.address.model.module.ModuleLesson;
 import seedu.address.model.module.ModuleName;
 import seedu.address.model.module.ZoomLink;
 import seedu.address.model.module.grade.GradeTracker;
@@ -26,7 +29,7 @@ class JsonAdaptedModule {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Module's %s field is missing!";
 
     private final String name;
-    private final String zoomLink;
+    private final List<JsonAdaptedZoomLink> zoomLinks = new ArrayList<>();
     private final String modularCredits;
     private final List<JsonAdaptedTag> tagged = new ArrayList<>();
     private final JsonAdaptedGradeTracker gradeTracker;
@@ -36,11 +39,14 @@ class JsonAdaptedModule {
      */
     @JsonCreator
     public JsonAdaptedModule(@JsonProperty("name") String name,
-                             @JsonProperty("zoomLink") String zoomLink,
+                             @JsonProperty("zoomLinks") List<JsonAdaptedZoomLink> zoomLinks,
                              @JsonProperty("gradeTracker") JsonAdaptedGradeTracker storedGradeTracker,
-                             @JsonProperty("modularCredits") String storedModularCredits) {
+                             @JsonProperty("modularCredits") String storedModularCredits,
+                             @JsonProperty("tagged") List<JsonAdaptedTag> tagged) {
         this.name = name;
-        this.zoomLink = zoomLink;
+        if (zoomLinks != null) {
+            this.zoomLinks.addAll(zoomLinks);
+        }
         if (storedGradeTracker == null) {
             this.gradeTracker = new JsonAdaptedGradeTracker(new GradeTracker());
         } else {
@@ -57,11 +63,8 @@ class JsonAdaptedModule {
      */
     public JsonAdaptedModule(Module source) {
         name = source.getName().fullName;
-        if (source.getLink() == null) {
-            zoomLink = null;
-        } else {
-            zoomLink = source.getLink().value;
-        }
+        source.getAllLinks().forEach((lesson, link) -> zoomLinks.add(new JsonAdaptedZoomLink(lesson.getLesson(),
+                link.getLink())));
         gradeTracker = new JsonAdaptedGradeTracker(source.getGradeTracker());
         tagged.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
@@ -75,10 +78,16 @@ class JsonAdaptedModule {
      * @throws IllegalValueException if there were any data constraints violated in the adapted person.
      */
     public Module toModelType() throws IllegalValueException {
-        final List<Tag> personTags = new ArrayList<>();
+
+        // ============================= Tags ================================== //
+
+        final List<Tag> moduleTags = new ArrayList<>();
         for (JsonAdaptedTag tag : tagged) {
-            personTags.add(tag.toModelType());
+            moduleTags.add(tag.toModelType());
         }
+        final Set<Tag> modelTags = new HashSet<>(moduleTags);
+
+        // ============================= Name ================================== //
 
         if (name == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
@@ -88,14 +97,18 @@ class JsonAdaptedModule {
             throw new IllegalValueException(ModuleName.MESSAGE_CONSTRAINTS);
         }
         final ModuleName modelName = new ModuleName(name);
-        if (zoomLink == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
-                    ZoomLink.class.getSimpleName()));
+
+        // =========================== ZoomLink =============================== //
+
+        final Map<ModuleLesson, ZoomLink> modelZoomLinks = new HashMap<>();
+        for (JsonAdaptedZoomLink link : zoomLinks) {
+            ModuleLesson lesson = new ModuleLesson(link.getLesson());
+            ZoomLink zoomLink = link.toModelType();
+            modelZoomLinks.put(lesson, zoomLink);
         }
-        if (!ZoomLink.isValidZoomLink(zoomLink)) {
-            throw new IllegalValueException(ModuleName.MESSAGE_CONSTRAINTS);
-        }
-        final ZoomLink modelLink = new ZoomLink(zoomLink);
+
+        // ========================= GradeTracker ============================= //
+
         if (gradeTracker == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
                     GradeTracker.class.getSimpleName()));
@@ -103,19 +116,15 @@ class JsonAdaptedModule {
         if (!GradeTracker.isValidGradeTracker(gradeTracker.toModelType())) {
             throw new IllegalValueException(GradeTracker.MESSAGE_INVALID_GRADE);
         }
+
+        // ========================= ModularCredits =========================== //
+
         if (!ModularCredits.isValidModularCredits(modularCredits)) {
             throw new IllegalValueException(ModularCredits.MESSAGE_CONSTRAINTS);
         }
-        //email and tagging removed temporarily
-        /*if (email == null) {
-            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
-        }
-        if (!Email.isValidEmail(email)) {
-            throw new IllegalValueException(Email.MESSAGE_CONSTRAINTS);
-        }*/
         final ModularCredits modelModularCredits = new ModularCredits(Double.parseDouble(modularCredits));
-        final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Module(modelName, modelLink, gradeTracker.toModelType(), modelTags, modelModularCredits);
+
+        return new Module(modelName, modelZoomLinks, gradeTracker.toModelType(), modelTags, modelModularCredits);
     }
 
 }

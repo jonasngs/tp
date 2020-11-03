@@ -25,7 +25,7 @@ public class ResetTaskCommand extends Command {
         + "Parameters: INDEX (must be a positive integer)\n"
         + "Example: " + COMMAND_WORD + " 1 \n";
 
-    public static final String MESSAGE_RESET_TASK_SUCCESS = "This task is not completed now : %1$s";
+    public static final String MESSAGE_RESET_TASK_SUCCESS = "This task is not completed now : \n%1$s";
 
     private final Index targetIndex;
 
@@ -43,9 +43,10 @@ public class ResetTaskCommand extends Command {
         }
 
         Task taskToReset = lastShownList.get(targetIndex.getZeroBased());
-        Task resetTask = taskToReset.setStatus(Status.COMPLETED);
+        Task resetTask = taskToReset.setStatus(Status.NOT_COMPLETED);
         model.setTask(taskToReset, resetTask);
-        return new CommandResult(String.format(MESSAGE_RESET_TASK_SUCCESS, taskToReset));
+        model.commitTodoList();
+        return new CommandResult(String.format(MESSAGE_RESET_TASK_SUCCESS, resetTask));
     }
 
     @Override

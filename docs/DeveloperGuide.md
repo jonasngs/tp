@@ -6,6 +6,11 @@ title: Developer Guide
 {:toc}
 
 --------------------------------------------------------------------------------------------------------------------
+## **Introduction**
+
+CAP5Buddy helps NUS SoC students to keep track of their module details efficiently. It helps them centralize key 
+module details and follows their study progress through a Command Line Interface (CLI) that allows efficient management 
+of module details. CAP5Buddy also functions as a scheduling system, todo list and contact list.
 
 ## **Setting up, getting started**
 
@@ -83,9 +88,21 @@ of the **XYZListPanel**.
 5. In addition, the `CommandResult` object can also instruct the `Ui` to perform certain actions, such as displaying
 help to the user.
 
+![Structure of the Storage Component](images/ModelClassDiagram.png)
+
 ### Model component
 
-**API** :
+**API** : [`Model.java`](https://github.com/AY2021S1-CS2103T-F12-3/tp/blob/master/src/main/java/seedu/address/model/Model.java)
+
+The `Model`,
+
+* stores a `UserPref` object that represents the user’s preferences.
+* stores the data for these 3 types of list:
+  * module tracker
+  * contact list
+  * todo list
+* exposes an unmodifiable `ObservableList<T>` for all types of list as mentioned above which can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.
+* does not depend on any of the other three components
 
 ### Storage component
 
@@ -108,16 +125,28 @@ component will be converting data in json format into java objects.
 Classes used by multiple components are in the `seedu.addressbook.commons` package.
 ### Common classes
 
-**API** :
+**API** : 
 
 ## Module List
 ![Structure of the Module List Component](images/ModuleListDiagram.png)
 
-The Module List that is stored in the model contains a list of modules. The Module List stores a Unique
-Contact List that prevents duplicate modules from being added to the Module List. Each Module contains
-a module name, a zoom link attached to that module and a grade tracker. The grade tracker tracks the assignments
-completed for that module and a grade for that module.
+**Module package** : [`seedu.address.model.module`](https://github.com/AY2021S1-CS2103T-F12-3/tp/tree/master/src/main/java/seedu/address/model/module)
 
+* Module is a container class that stores :
+  * Name of a module
+  * Zoom link of a module
+  * GradeTracker of a module
+* GradeTracker is a container class that stores:
+  * Grade for a module
+  * Assignments for a module
+  
+#### ModuleList class
+**ModuleList class** : [`ModuleList.java`](https://github.com/AY2021S1-CS2103T-F12-3/tp/blob/master/src/main/java/seedu/address/model/ModuleList.java)
+
+* Wraps all data i.e. Modules at the module list level
+* Stores Modules in memory
+* Stores a UniqueModuleList
+* Duplicate Modules are not allowed
 
 ## CAP Calculator
 
@@ -127,11 +156,48 @@ completed for that module and a grade for that module.
 
 ![Structure of the Contact List Component](images/ContactListDiagram.png)
 
-The Contact List that is stored in the model contains a list of contacts. The Contact List stores a
-Unique Contact List prevents duplicate contacts from being added.Each contact stored has their Name,
-Email address and Telegram handle stored with it.
+#### Contact class
+
+**Contact package** : [`seedu.address.model.contact`](https://github.com/AY2021S1-CS2103T-F12-3/tp/tree/master/src/main/java/seedu/address/model/contact)
+
+* Contact is a container class that stores :
+  * Name of a contact
+  * Email of a contact
+  * Telegram of a contact
+#### ContactList class
+**ContactList class** : [`ContactList.java`](https://github.com/AY2021S1-CS2103T-F12-3/tp/blob/master/src/main/java/seedu/address/model/ContactList.java)
+
+* Wraps all data i.e. Contacts at the contact list level
+* Stores Contacts in memory
+* Stores a UniqueContactList
+* Duplicate Contacts are not allowed
 
 ## Todo List
+
+![Structure of the Todo List Component](images/TodoList/TodoListClassDiagram.png)
+
+#### Task class
+
+**Task package** : [`seedu.address.model.task`](https://github.com/AY2021S1-CS2103T-F12-3/tp/tree/master/src/main/java/seedu/address/model/task)
+
+* Task is a container class that stores :
+  * Name of a task
+  * Tags of a task
+  * Priority of a task
+  * Date or deadline of a task
+  * Status of a task<br/>
+  Only name is compulsory when creating a new Task.
+
+#### TodoList class
+
+**TodoList class** : [`TodoList.java`](https://github.com/AY2021S1-CS2103T-F12-3/tp/blob/master/src/main/java/seedu/address/model/TodoList.java)
+
+* Wraps all data i.e. Tasks at the Todo List level
+* Stores Tasks in memory
+* Stores a UniqueTodoList
+* Duplicate Task objects are now allowed
+
+TodoList will be explained more comprehensively in the [TodoList feature](#todolist-feature) Section
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -139,13 +205,44 @@ Email address and Telegram handle stored with it.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
-
+### \[Proposed\] Add Event feature
+![Structure of the Add Event command](images/AddEventSequenceDiagram.png)
 #### Proposed Implementation
+The idea of this feature is to be able to allow the user to keep track of his/her current events that
+will be happening. Events can be either a one time event like an exam for a particular module, or a recurring
+event like a weekly tutorial class.
+
+How we are currently implementing this feature is by following the same implementation as the AB3. We have an event
+object under the Model package. Two classes called EventName and EventTime act as information containers to store
+the respective data and help support the Event class.
+
+We also make sure in the Logic package, there are personal sub-parsers for each of the existing Event
+related commands, and an overall Parser known as SchedulerParser that is in charge of managing all of the
+sub-parsers of the Scheduler. 
+
+Each of the commands of the Scheduler will always return a CommandResult class, that is basically an information
+container that stores all the relevant data of the results. This CommandResult object is then passes back up to the
+UiManager, where it is then passed to the GUI components for it to be displayed.
 
 #### Design consideration:
 
-##### Aspect: How undo & redo executes
+##### Aspect: Whether to create a new Parser for Scheduler.
+Option 1 **(Current implementation)**: A custom Parser in charge of all **Scheduler** related commands **only**.
+Pros: 
+- More OOP orientated.
+- More defensive programming.
+Cons:
+- More Parsers to handle by the ParserManager
+
+Option 2: Place the Scheduler related parser together with the rest of the other parsers for other features, like module list, etc.
+Pros:
+- Faster to implement.
+- Less effort needed, simply add on to the existing Parser.
+Cons:
+- Mess and less readible, hard to distinguish between differnt commands.
+- Higher chance of errors, as we are mixing all the different parsers for every feature into a single Parser.
+- LONG methods.
+
 
 ### \[Proposed\] Data archiving
 
@@ -216,7 +313,7 @@ Figure ?.? Activity diagram representing the execution of `AddContactCommand`
 #### View Contact Feature
 
 
-#### <br> 1.1.2 Design Considerations <br>
+#### 1.1.2 Design Considerations <br>
 ##### Aspect: Data structure to support Contact related functions
 * Alternative 1: Use a `HashMap` to store contacts
   * Pros: Will be more efficient to retrieve contacts from a HashMap.
@@ -249,14 +346,123 @@ should end at the destroy marker (X) but due to a limitation of PlantUML, the li
 * Alternative 1 (current choice): Calculates based on academic information on mods tagged as completed.
     * Pros : Easy to implement
     * Cons : User has to manually input every module taken
-   
+    
 * Alternative 2 : Prompts user for academic information used for last calculated cap and stores it.
-    * Pros :
-        * User does not need to input uncessary modules.
-        * Will use less memory.(e.g Modules that the user is not currently taking does not need to be added by user).
-   
+    * Pros : 
+     * User does not need to input unnecessary modules.
+     * Will use less memory.(e.g Modules that the user is not currently taking does not need to be added by user). 
     * Cons : Will require additional storage.
-   
+
+### TodoList feature
+
+#### Implementation
+
+The TodoList feature has two main component :
+
+* **Containee component** (Task-related classes)
+  * `Class Task` - container class to store information about a task
+  * `Class TaskName` - wrapper class to store the name of a task
+  * `Class Date` - wrapper class to store the date/deadline of a task
+  * `Enum Priority` - enum class to represent priority of a task
+  * `Enum Status` - enum class to represent the progress status of a task
+
+* **Container component** (List-like classes)
+  * Class `UniqueTodoList` - container class for storing tasks
+  * Class `TodoList` - wrapper class for UniqueTodoList
+  * Interface `ReadOnlyTodoList` - interface for displaying the list on the GUI
+
+##### Containee Component
+
+The Task class mainly functions as a class to store all the informations related to a task i.e. name, tag, priority,
+date, and status. It does not have any subclasses.
+
+The Task class supports the following operations :
+
+* Setters for all the field
+* Getters for all the field
+* `Task#isSameTask()` - checks if two tasks are the same i.e. have the same name 
+(weaker than Task#equals() which requires all the fields to be the same)
+* `Task#hasSameTag()` - checks if the task has the specified tag
+* `Task#hasSamePriority()` - checks if the task has the specified priority
+* `Task#hasSameDate()` - checks if the task has the specified date
+
+##### Container Component
+
+The TodoList class is facilitated by UniqueTodoList. The UniqueTodoList is stored internally inside
+the TodoList class which act like a wrapper class. 
+
+The TodoList class supports the following operations :
+
+* `TodoList#resetData()` - replaces all data in TodoList with new data.
+* `TodoList#hasTask()` - checks if the specified task exist in the list.
+* `TodoList#addTask()` - adds a task to the list.
+* `TodoList#setTask()` - replaces a task with the specified task.
+* `TodoList#removeTask()` - removes the specified task from the list.
+
+The operations above are exposed in the Model interface as :
+
+* `Model#hasTask()`
+* `Model#addTask()`
+* `Model#setTask()`
+* `Model#deleteTask()`
+
+TodoList implements ReadOnlyTodoList which require the following operation :
+
+* `ReadOnlyTodoList#getTodoList()` - returns an ObservableList with type Task that is immutable, and we cannot
+  modify the elements.
+
+#### Design Consideration
+
+##### Aspect: Task type
+
+* Alternative 1 (current): <br/>
+  Use one concrete class i.e. Task without inheritance involved. The type of the task
+  is represented by the Tag field instead.
+  
+  Pros :
+  * Easier to implement
+  * Types are not pre-defined i.e. can simply add a different tag to represent different type of task
+  
+  Cons :
+  * All type of task have the same pre-defined field
+
+* Alternative 2 : <br/>
+  Use one abstract class i.e. Task with inheritance. Each subclasses represent a type of a Task.
+  
+  Pros :
+  * Difference between type are clear and standardized
+  * Can be considered more OOP
+  
+  Cons :
+  * Types must be pre-defined i.e. cannot add new type of classes without adding codes
+  
+  Alternative 1 is chosen since we prioritize user freedom to create custom type for the task.
+  
+    
+### \[Proposed\] GradeTracker feature
+
+#### Proposed Implementation
+
+The proposed grade tracker feature is an association class used to store additional information for the module. 
+The `Assignments` each store their own `assignment name`, `percentage of final grade` and `result`. 
+
+![Structure of the Module List Component](images/GradeTrackerDiagram.png)
+
+When an `assignment` is added, it follows the sequence diagram as shown below. The sequence flows similarly 
+to the rest of the project as the command is parsed and then executed.
+
+![Sequence Diagram of the Add Assignment Command](images/AddAssignmentSequenceDiagram.png)
+
+#### Design consideration:
+
+##### Aspect: Format to store the grade for a module
+* Alternative 1 : Grade stores CAP.
+    * Pros : Easier to integrate with Cap Calculator
+    * Cons : User has to manually input CAP and does not know the average from the assignments accumulated
+    
+* Alternative 2 (current choice): Grade stores the raw score calculated from assignment
+    * Pros : Grade can be automatically calculated from the assignment overall percentage for user to view
+    * Cons : Requires separate CAP to be stored for Cap Calculator to access
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -300,8 +506,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* *`    | user                                       | find a module by name          | locate details of a module without having to go through the entire list |
 | `* *`    | user                                       | add a zoom link to a module    | keep track and retrieve it easily                      |
 | `* *`    | user                                       | calculate my cumulative average point   | plan my academic progress for the future      |
-| `* *`    | user                                       | store graded assignments       | keep the information of the assignments that contributed to my grade      |
+| `* *`    | user                                       | add graded assignments       | add the information of the assignments that contributed to my grade      |
+| `* *`    | user                                       | edit my graded assignments     | update the information of the assignments I have completed     |
+| `* *`    | user                                       | delete graded assignments      | remove the assignments that are do not contribute to my grade anymore|
 | `*`      | user who is overloading                    | sort modules by name           | locate a module easily                                 |
+| `* * *`  | user                                       | add a task                     | keep track of the tasks that I must complete           |
+| `* * *`  | user                                       | delete a task                  | remove a task that has been done                       |
+| `* * *`  | user                                       | edit a task                    | make necessary changes to a task                       |
+| `* *`    | user                                       | label a task as completed      |                                                        |
+| `* *`    | user                                       | find a task                    | find a task easily without looking at the entire list  |
+| `* *`    | user                                       | sort tasks based on criteria   | easily manage the tasks by order                       |
+| `* *`    | user                                       | filter tasks based on criteria | easily manage the tasks by group                       |
+| `*`      | user                                       | reset the status of a task     | change a task from labeled as completed to not completed |
+| `*`      | user                                       | archive a task                 | hide irrelevant tasks that might still be useful for future purposes |               
 
 *{More to be added}*
 
@@ -841,23 +1058,6 @@ testers are expected to do more *exploratory* testing.
 
    1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
-
-1. _{ more test cases …​ }_
-
-### Deleting a person
-
-1. Deleting a person while all persons are being shown
-
-   1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
-
-   1. Test case: `delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
-
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
-
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
 
 1. _{ more test cases …​ }_
 

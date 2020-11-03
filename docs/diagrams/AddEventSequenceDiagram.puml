@@ -1,0 +1,29 @@
+@startuml
+!include style.puml
+
+Participant ":ParserManager" as parserManager LOGIC_COLOR
+Participant ":SchedulerParser" as schedulerParser LOGIC_COLOR
+Participant ":XYZEventParser" as XYZParser LOGIC_COLOR
+Participant ":XYZEventCommand" as XYZCommand LOGIC_COLOR
+
+-[USER_COLOR]> parserManager : "addevent n/CS2103T d/12-12-2020"
+activate parserManager LOGIC_COLOR
+
+parserManager -[LOGIC_COLOR]> schedulerParser : "new SchedulerParser()"
+activate schedulerParser LOGIC_COLOR
+
+schedulerParser -[LOGIC_COLOR]> XYZParser : "parseCommand()"
+activate XYZParser LOGIC_COLOR
+
+XYZParser -[LOGIC_COLOR]> XYZCommand : "parse()"
+activate XYZCommand LOGIC_COLOR
+
+XYZCommand --[LOGIC_COLOR]> XYZParser
+deactivate XYZCommand
+
+XYZParser --[LOGIC_COLOR]> schedulerParser
+deactivate XYZParser
+
+schedulerParser --[LOGIC_COLOR]> parserManager
+deactivate schedulerParser
+@enduml

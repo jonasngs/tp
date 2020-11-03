@@ -9,6 +9,6 @@ public enum Criterion {
     PRIORITY;
 
     public static final String MESSAGE_CONSTRAINTS =
-            "There are only 3 criterion that can be chosen: DESCTIPTION(DESC), "
+            "There are only 3 criterion that can be chosen: NAME, "
             + "DEADLINE(DATE), and PRIORITY(PRIO).";
 }

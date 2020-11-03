@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.module.grade.Assignment;
+import seedu.address.model.module.grade.AssignmentName;
+import seedu.address.model.module.grade.AssignmentPercentage;
+import seedu.address.model.module.grade.AssignmentResult;
 
 public class JsonAdaptedAssignment {
     public static final String MISSING_FIELD_MESSAGE_FORMAT = "Assignment's %s field is missing!";
@@ -29,9 +32,9 @@ public class JsonAdaptedAssignment {
      * Converts a given {@code Assignment} into this class for Jackson use.
      */
     public JsonAdaptedAssignment(Assignment source) {
-        assignmentName = source.getAssignmentName();
-        assignmentPercentage = source.getPercentageOfGrade();
-        assignmentResult = source.getResult();
+        assignmentName = source.getAssignmentName().get().assignmentName;
+        assignmentPercentage = source.getAssignmentPercentage().get().assignmentPercentage;
+        assignmentResult = source.getAssignmentResult().get().assignmentResult;
     }
 
     /**
@@ -49,15 +52,18 @@ public class JsonAdaptedAssignment {
         if (Double.isNaN(assignmentResult)) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, "assignment result"));
         }
-        if (!Assignment.isValidAssignmentName(assignmentName)) {
+        if (!AssignmentName.isValidAssignmentName(assignmentName)) {
             throw new IllegalValueException(Assignment.MESSAGE_ASSIGNMENT_NAME_CONSTRAINTS);
         }
-        if (!Assignment.isValidAssignmentPercentage(assignmentPercentage)) {
+        AssignmentName modelAssignmentName = new AssignmentName(assignmentName);
+        if (!AssignmentPercentage.isValidAssignmentPercentage(assignmentPercentage)) {
             throw new IllegalValueException(Assignment.MESSAGE_ASSIGNMENT_PERCENTAGE_CONSTRAINTS);
         }
-        if (!Assignment.isValidAssignmentResult(assignmentResult)) {
+        AssignmentPercentage modelAssignmentPercentage = new AssignmentPercentage(assignmentPercentage);
+        if (!AssignmentResult.isValidAssignmentResult(assignmentResult)) {
             throw new IllegalValueException(Assignment.MESSAGE_ASSIGNMENT_RESULT_CONSTRAINTS);
         }
-        return new Assignment(assignmentName, assignmentPercentage, assignmentResult);
+        AssignmentResult modelAssignmentResult = new AssignmentResult(assignmentResult);
+        return new Assignment(modelAssignmentName, modelAssignmentPercentage, modelAssignmentResult);
     }
 }

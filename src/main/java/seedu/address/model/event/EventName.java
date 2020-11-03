@@ -31,7 +31,12 @@ public class EventName {
         return this.name;
     }
 
-    public boolean isValidName(String name) {
+    /**
+     * Checks if the given String name is valid based on the format.
+     * @param name to be checked.
+     * @return boolean.
+     */
+    public static boolean isValidName(String name) {
         return name.matches(VALIDATION_REGEX);
     }
 
@@ -46,9 +51,11 @@ public class EventName {
             return false;
         } else if (this == otherName) {
             return true;
+        } else if (otherName instanceof EventName) {
+            EventName other = (EventName) otherName;
+            return this.getName().equals(other.getName());
         } else {
-            return otherName instanceof EventName
-                    || this.name.equals(((EventName) otherName).getName());
+            return false;
         }
     }
 

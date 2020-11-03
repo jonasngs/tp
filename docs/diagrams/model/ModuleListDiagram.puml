@@ -1,0 +1,20 @@
+@startuml
+!include ../style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor MODEL_COLOR
+skinparam classBackgroundColor MODEL_COLOR
+
+Interface ReadOnlyModuleList <<Interface>>
+
+ModuleList *-right-> "1" UniqueModuleList
+ModuleList .down.|> ReadOnlyModuleList
+
+UniqueModuleList o-right->"*" Module
+
+Module *-->"1" ModuleName
+Module *-->"1" ZoomLink
+Module *-->"1" GradeTracker
+GradeTracker *-->"1" Grade
+GradeTracker *-->"*" Assignment
+
+@enduml

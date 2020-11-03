@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PRIORITY;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -57,8 +58,8 @@ public class AddTaskParser implements Parser<AddTaskCommand> {
 
         if (argMultimap.getValue(PREFIX_TAG).isPresent()) {
             logger.info("Tag field is present");
-            Tag taskTag = ParserUtil.parseTag(argMultimap.getValue(PREFIX_TAG).get());
-            task = task.setTag(taskTag);
+            Set<Tag> taskTags = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
+            task = task.setTags(taskTags);
         }
         if (argMultimap.getValue(PREFIX_PRIORITY).isPresent()) {
             logger.info("Priority field is present.");

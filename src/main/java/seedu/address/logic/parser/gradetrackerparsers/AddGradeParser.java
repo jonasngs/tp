@@ -14,6 +14,7 @@ import seedu.address.logic.parser.Parser;
 import seedu.address.logic.parser.ParserUtil;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.module.ModuleName;
 import seedu.address.model.module.grade.Grade;
 
 public class AddGradeParser implements Parser<AddGradeCommand> {
@@ -21,14 +22,14 @@ public class AddGradeParser implements Parser<AddGradeCommand> {
     public AddGradeCommand parse(String args) throws ParseException {
         requireNonNull(args);
         Grade newGrade;
-        String moduleName;
+        ModuleName moduleName;
         ArgumentTokenizer tokenizer = new ArgumentTokenizer(args, PREFIX_NAME, PREFIX_GRADE);
         ArgumentMultimap argMultimap = tokenizer.tokenize();
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_GRADE)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddGradeCommand.MESSAGE_USAGE));
         }
-        moduleName = ParserUtil.parseModuleName(argMultimap.getValue(PREFIX_NAME).get()).fullName;
+        moduleName = ParserUtil.parseModuleName(argMultimap.getValue(PREFIX_NAME).get());
         double grade = ParserUtil.parseGrade(
                 argMultimap.getValue(PREFIX_GRADE).get());
 

@@ -3,7 +3,9 @@ package seedu.address.logic.commands.contactlistcommands;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.Command;
@@ -25,11 +27,21 @@ public class DeleteContactCommand extends Command {
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-    public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Deleted Contact: %1$s";
+    public static final String MESSAGE_DELETE_CONTACT_SUCCESS = "Deleted Contact: %1$s";
+
+    private final Logger logger = LogsCenter.getLogger(DeleteContactCommand.class);
 
     private final Index targetIndex;
 
+    /**
+     * Creates and initialises a DeleteContactCommand object.
+     *
+     * @param targetIndex Index object encapsulating the index of the contact in the contact list.
+     */
     public DeleteContactCommand(Index targetIndex) {
+        requireNonNull(targetIndex);
+        assert targetIndex.getZeroBased() >= 0 : "zero based index must be non-negative";
+        logger.info("Deleting contact at index " + targetIndex.getOneBased());
         this.targetIndex = targetIndex;
     }
 
@@ -44,7 +56,9 @@ public class DeleteContactCommand extends Command {
 
         Contact contactToDelete = lastShownList.get(targetIndex.getZeroBased());
         model.deleteContact(contactToDelete);
-        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, contactToDelete));
+        model.commitContactList();
+        logger.info("Contact has been deleted");
+        return new CommandResult(String.format(MESSAGE_DELETE_CONTACT_SUCCESS, contactToDelete));
     }
 
     @Override
