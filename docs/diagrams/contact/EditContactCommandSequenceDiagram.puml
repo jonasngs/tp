@@ -1,0 +1,74 @@
+@startuml
+!include ../style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":ContactListParser" as ContactListParser LOGIC_COLOR
+participant ":EditContactParser" as EditContactParser LOGIC_COLOR
+participant "c:EditContactCommand" as EditContactCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(editcontact)
+activate LogicManager
+
+LogicManager -> ContactListParser : parseCommand(editcontact)
+activate ContactListParser
+
+create EditContactParser
+ContactListParser -> EditContactParser
+activate EditContactParser
+
+EditContactParser --> ContactListParser
+deactivate EditContactParser
+
+ContactListParser -> EditContactParser :parse(commandArgument)
+activate EditContactParser
+
+ref over EditContactParser: Create EditContactDescriptor to store edited contact details
+
+create EditContactCommand
+EditContactParser -> EditContactCommand
+activate EditContactCommand
+
+EditContactCommand --> EditContactParser: c
+deactivate EditContactCommand
+
+EditContactParser --> ContactListParser: c
+deactivate EditContactParser
+
+EditContactParser -[hidden]-> EditContactCommand
+destroy EditContactParser
+
+ContactListParser --> LogicManager: c
+deactivate ContactListParser
+
+LogicManager -> EditContactCommand : execute(model)
+activate EditContactCommand
+
+EditContactCommand -> Model : setContact(targetContact, editedContact)
+activate Model
+
+Model --> EditContactCommand
+deactivate Model
+
+create CommandResult
+EditContactCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> EditContactCommand: r
+deactivate CommandResult
+
+EditContactCommand --> LogicManager: r
+deactivate EditContactCommand
+
+EditContactCommand -[hidden]-> LogicManager
+destroy EditContactCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

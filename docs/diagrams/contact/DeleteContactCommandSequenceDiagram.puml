@@ -1,0 +1,72 @@
+@startuml
+!include ../style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":ContactListParser" as ContactListParser LOGIC_COLOR
+participant ":DeleteContactParser" as DeleteContactParser LOGIC_COLOR
+participant "c:DeleteContactCommand" as DeleteContactCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(deletecontact)
+activate LogicManager
+
+LogicManager -> ContactListParser : parseCommand(deletecontact)
+activate ContactListParser
+
+create DeleteContactParser
+ContactListParser -> DeleteContactParser
+activate DeleteContactParser
+
+DeleteContactParser --> ContactListParser
+deactivate DeleteContactParser
+
+ContactListParser -> DeleteContactParser :parse(commandArgument)
+activate DeleteContactParser
+
+create DeleteContactCommand
+DeleteContactParser -> DeleteContactCommand
+activate DeleteContactCommand
+
+DeleteContactCommand --> DeleteContactParser: c
+deactivate DeleteContactCommand
+
+DeleteContactParser --> ContactListParser: c
+deactivate DeleteContactParser
+
+DeleteContactParser -[hidden]-> DeleteContactCommand
+destroy DeleteContactParser
+
+ContactListParser --> LogicManager: c
+deactivate ContactListParser
+
+LogicManager -> DeleteContactCommand : execute(model)
+activate DeleteContactCommand
+
+DeleteContactCommand -> Model : deleteContact(contact)
+activate Model
+
+Model --> DeleteContactCommand
+deactivate Model
+
+create CommandResult
+DeleteContactCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> DeleteContactCommand: r
+deactivate CommandResult
+
+DeleteContactCommand --> LogicManager: r
+deactivate DeleteContactCommand
+
+DeleteContactCommand -[hidden]-> LogicManager
+destroy DeleteContactCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

@@ -12,7 +12,9 @@ Class ParserManager
 Class ModuleListParser
 Class ContactListParser
 Class TodoListParser
-Class XYZCommandParser
+Class GradeTrackerParser
+Class SchedulerParser
+Class XYZParser
 Class CliSyntax
 Class ParserUtil
 Class ArgumentMultimap
@@ -42,19 +44,23 @@ LogicManager -->"1" ParserManager
 ParserManager -->"1" ModuleListParser
 ParserManager -->"1" ContactListParser
 ParserManager -->"1" TodoListParser
+ParserManager -->"1" GradeTrackerParser
+ParserManager -->"1" SchedulerParser
 
-ModuleListParser .down.> XYZCommandParser: creates >
-ContactListParser .down.> XYZCommandParser: creates >
-TodoListParser .down.> XYZCommandParser: creates >
+ModuleListParser .down.> XYZParser: creates >
+ContactListParser .down.> XYZParser: creates >
+TodoListParser .down.> XYZParser: creates >
+GradeTrackerParser .down.> XYZParser: creates >
+SchedulerParser .down.> XYZParser: creates >
 
-XYZCommandParser ..> XYZCommand : creates >
-XYZCommandParser ..|> Parser
-XYZCommandParser ..> ArgumentMultimap
-XYZCommandParser ..> ArgumentTokenizer
+XYZParser ..> XYZCommand : creates >
+XYZParser ..|> Parser
+XYZParser ..> ArgumentMultimap
+XYZParser ..> ArgumentTokenizer
 ArgumentTokenizer .left.> ArgumentMultimap
-XYZCommandParser ..> CliSyntax
+XYZParser ..> CliSyntax
 CliSyntax ..> Prefix
-XYZCommandParser ..> ParserUtil
+XYZParser ..> ParserUtil
 ParserUtil .down.> Prefix
 ArgumentTokenizer .down.> Prefix
 XYZCommand -up--|> Command

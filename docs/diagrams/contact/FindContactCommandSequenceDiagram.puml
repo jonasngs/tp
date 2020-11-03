@@ -1,0 +1,74 @@
+@startuml
+!include ../style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":ContactListParser" as ContactListParser LOGIC_COLOR
+participant ":FindContactParser" as FindContactParser LOGIC_COLOR
+participant "c:FindContactCommand" as FindContactCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute(findcontact)
+activate LogicManager
+
+LogicManager -> ContactListParser : parseCommand(findcontact)
+activate ContactListParser
+
+create FindContactParser
+ContactListParser -> FindContactParser
+activate FindContactParser
+
+FindContactParser --> ContactListParser
+deactivate FindContactParser
+
+ContactListParser -> FindContactParser :parse(commandArgument)
+activate FindContactParser
+
+ref over FindContactParser: Create FindContactCriteria and add predicates
+
+create FindContactCommand
+FindContactParser -> FindContactCommand
+activate FindContactCommand
+
+FindContactCommand --> FindContactParser: c
+deactivate FindContactCommand
+
+FindContactParser --> ContactListParser: c
+deactivate FindContactParser
+
+FindContactParser -[hidden]-> FindContactCommand
+destroy FindContactParser
+
+ContactListParser --> LogicManager: c
+deactivate ContactListParser
+
+LogicManager -> FindContactCommand : execute(model)
+activate FindContactCommand
+
+FindContactCommand -> Model : updateFilteredContactList(predicate)
+activate Model
+
+Model --> FindContactCommand
+deactivate Model
+
+create CommandResult
+FindContactCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> FindContactCommand: r
+deactivate CommandResult
+
+FindContactCommand --> LogicManager: r
+deactivate FindContactCommand
+
+FindContactCommand -[hidden]-> LogicManager
+destroy FindContactCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

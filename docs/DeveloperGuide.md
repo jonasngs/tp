@@ -80,8 +80,8 @@ of the **XYZListPanel**.
 
 **API** : `Logic.java`
 
-1. Logic uses the `ParserManager` class to create the respective Parser classes: `ModuleListParser`, `ContactListParser`
- and `TodoListParser`. Depending on the user command, the user command will be parsed by the relevant Parser class.
+1. Logic uses the `ParserManager` class to create the respective `Parser` classes: `ModuleListParser`, `ContactListParser`, `TodoListParser`,
+   `GradeTrackerParser` and `SchedulerParser`. Depending on the user command, the user command will be parsed by the relevant Parser class.
 2. This results in a `Command` object which is executed by `LogicManager`.
 3. The command execution can affect the Model (e.g. adding a module).
 4. The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `Ui`.
@@ -246,21 +246,26 @@ Cons:
 
 ### \[Proposed\] Data archiving
 
-### 1.1 Contact List Management
+
+
+### Contact List Management
 
 As a module tracking system, Cap 5 Buddy allows users to manage a list of module-related contacts with ease.
+This is especially important since being enrolled in numerous modules results in the need to keep track of
+numerous contacts, each with different contact details.
 
 The section below provides details of the implementation of each Contact List function and design considerations
-of the contact list feature.
+of the contact list features.
 
-#### 1.1.1 Contact List Commands
+#### Contact List Commands
 
 Below is a list of all `Contact` related features:
 
 1. Add a contact: Adds a new contact into the contact list
 2. Delete a contact: Deletes a pre-existing contact from the contact list
 3. Edit a contact: Edits a pre-existing contact in the contact list
-4. View all contacts: Lists out all contacts in the contact list
+4. Find a contact: Search for contacts using different search parameters
+
 
 Given below is the class diagram of the `Contact` class:
 
@@ -268,57 +273,226 @@ Given below is the class diagram of the `Contact` class:
 
 Figure ?.? Class Diagram for Contact class
 
-#### 1.1.2 Details of implementation
+#### Details of implementation
+
+##### Add contact feature
+
+The add contact feature creates and adds a new `Contact`, using contact details provided by the users, into the contact list if the contact does not already exist. 
+This feature is facilitated by the following classes:
+   
+ * `AddContactParser`:
+   * It implements `AddContactParser#parse()` to parse and validate the user arguments to create a new `Contact`.
+   
+ * `AddContactCommand`:
+   * It implements `AddContactCommand#execute()` which executes the addition of the new contact into `Model`.
 
 Given below is an example usage scenario and how the mechanism for adding contact behaves at each step:
-1. `LogicManager` receives the user input `addcontact n/John e/john@gmail.com te/@johndoe` from `Ui`
-2. `LogicManager` calls `ContactListParser#parseCommand()` to create `AddContactParser`
-3. `ContactListParser` will call the respective `AddContactParser#parse()` method to parse the command arguments
-4. This creates a `AddContactCommand` and `AddContactCommand#execute` will be invoked by `LogicManager`
-5. The `Model#addContact()` operation exposed in the `Model` interface is used to add the new contact
-6. A `CommandResult` from the command execution is returned to `LogicManager`
+Step 1. `LogicManager` receives the user input `addcontact n/John e/john@gmail.com te/@johndoe` from `Ui`
+Step 2. `LogicManager` calls `ContactListParser#parseCommand()` to create an `AddContactParser`
+Step 3. Additionally, `ContactListParser` will call the `AddContactParser#parse()` method to parse the command arguments
+Step 4. This creates an `AddContactCommand` and `AddContactCommand#execute()` will be invoked by `LogicManager` to add the new contact
+Step 5. The `Model#addContact()` operation exposed in the `Model` interface is invoked to add the new contact
+Step 6. A `CommandResult` from the command execution is returned to `LogicManager`
 
 Given below is the sequence diagram of how the operation to add a contact works:
 ![AddContactSequenceDiagram](images/Contact/AddContactSequenceDiagram.png)
 Figure ?.? Sequence diagram for the execution of `AddContactCommand`
 
-The section below describes the implementation details of each Contact List feature.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `AddContactCommand` and `AddContactParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
 
-#### Add Contact Feature
-* This feature creates and adds a new `Contact` using the contact details provided by users
-* `ContactListParser` invokes `AddContactParser#parse()` to parse and validate the command arguments
-* `AddContactCommand#execute()` will be called to add the new `Contact` if the contact does not already exist
-* The mechanism to add a contact is facilitated by `Contactlist` which implements `ContactList#addContact()`
-* This operation is exposed in the `Model` interface as `Model#addContact()`
+</div>
 
 The following activity diagram summarizes what happens when a user executes the `AddContactCommand`:
 ![AddContactCommandActivityDiagram](images/Contact/AddContactCommandActivityDiagram.png)
 Figure ?.? Activity diagram representing the execution of `AddContactCommand`
 
+##### Design consideration:
+
+##### Aspect: Require users to provide all contact fields when adding a new contact
+
+* **Alternative 1 (current choice):** Require `ContactName` and `Email` to be mandatory fields that must be provided, while leaving `Telegram` as an optional field
+  * Pros: This caters to certain contacts who do not have a `Telegram` field, providing more flexibility for users when creating contacts.
+  * Cons: This can complicate the process of checking if 2 contacts are the same since we need to consider if the `Telegram` field of a contact 
+          is present before the comparison is performed. 
+  
+* **Alternative 2:** Require `ContactName`, `Email` and `Telegram` to be mandatory fields
+  * Pros: The process of checking if 2 contacts are the same by comparing all 3 contact fields will be simpler.
+  * Cons: This can create problems for users who want to add a contact that does not have a suitable `Telegram` field
+
+Alternative 1 was chosen since it provides users with greater freedom when creating contacts. Enforcing all contact fields to be 
+mandatory can restrict users when adding contacts, hindering user experience.
+
+
 #### Delete Contact Feature
-* This feature deletes a pre-existing `Contact` using the contact ID provided by users
-* `ContactListParser` invokes `DeleteContactParser#parse()` to parse and validate the contact ID
-* `DeleteContactCommand#execute()` will be called to delete the `Contact`
-* The mechanism to delete a contact is facilitated by `ContactList` which implements `ContactList#removeContact()`
-* This operation is exposed in the `Model` interface as `Model#deleteContact()`
+
+The delete contact feature deletes a pre-existing `Contact` using the index of the contact on the displayed contact list.
+This feature is facilitated by the following classes: 
+
+  * `DeleteContactParser`:
+    * It implements `DeleteContactParser#parse()` to parse and validate the contact ID
+
+  * `DeleteContactCommand`:
+    * It implements `DeleteContactCommand#execute()` to delete the `Contact` from `Model`
+
+After the user input has been parsed by `DeleteContactParser`, `LogicManager` will execute the delete operation by invoking
+`DeleteContactCommand#execute()`. This deletes the target contact by invoking the `Model#deleteContact()` method exposed in the `Model` interface.
+
+Given below is the sequence diagram of how the operation to delete a contact works:
+![DeleteContactSequenceDiagram](images/Contact/DeleteContactCommandSequenceDiagram.png)
+
+#### Design consideration:
+
+##### Aspect: Method to delete contact
+
+* **Alternative 1 (current choice):** Delete a contact based on its index in the displayed contact list
+  * Pros: Using the contact index allows us to uniquely identify the target contact to delete, reducing the room for possible error
+  * Cons: The target contact to be deleted might not be displayed on the contact list and hence the contact index might not be
+          readily available. This can inconvenience users who have to search for the contact to retrieve the contact index.
+  
+* **Alternative 2:** Delete a contact based on the contact name
+  * Pros: It can make the deletion process simpler for **users** who can provide the name of the contact without having to execute more commands.
+  * Cons: This can complicate the deletion process since contacts with the same name is a possibility. If there are multiple
+          contacts with the same provided name, more information of the target contact has to be provided by the user,
+          creating more inconvenience for the user as well.
+          
+Alternative 1 was chosen since it guarantees a unique contact would be provided in every case. This ensures the
+contact deletion process is safe and the correct contact is deleted, minimising the room for potential errors.  
+          
+
 
 #### Edit Contact Feature
-* This feature edits a pre-existing `Contact` using the contact details provided by users.
-* `ContactListParser` invokes `EditContactParser#parse()` to parse and validate the contact ID and command arguments
-* `EditContactCommand#execute()` will be called to create the edited `Contact` and replace the old contact with the edited contact,
-   if the edited contact does not already exist
-* The mechanism to edit a contact is facilitated by `ContactList` which implements `ContactList#setContact()`
-* This operation is exposed in the `Model` interface as `Model#setContact()`
 
-#### View Contact Feature
+The edit contact feature edits a pre-existing contact in the contact list using contact details provided by the users.
+This feature is facilitated by the following classes:
+
+  * `EditContactParser`: 
+    * It implements `EditContactParser#parse()` to parse and validate the provided contact details and contact index
+    
+  * `EditContactDescriptor`:
+    * It stores the contact details which will be used to edit the target contact
+    
+  * `EditContactCommand`:
+    * It implements `EditContactCommand#execute()` to edit the contact in `Model`
+    
+Given below is an example usage scenario and how the mechanism for editing contact behaves at each step:
+Step 1. `LogicManager` receives the user input `editcontact 1 n/John te/@johndoe` from `Ui`
+Step 2. `LogicManager` calls `ContactListParser#parseCommand()` to create an `EditContactParser`
+Step 3. Additionally, `ContactListParser` will call the `EditContactParser#parse()` method to parse the command arguments
+Step 4. This creates an `EditContactCommand` and `EditContactCommand#execute()` will be invoked by `LogicManager` to edit the target contact
+Step 5. The `Model#setContact()` operation exposed in the `Model` interface is invoked to replace the target contact with the edited contact
+Step 6. A `CommandResult` from the command execution is returned to `LogicManager`
+
+Given below is the sequence diagram of how the operation to edit a contact works:
+![EditContactSequenceDiagram](images/Contact/EditContactCommandSequenceDiagram.png)
 
 
-#### 1.1.2 Design Considerations <br>
-##### Aspect: Data structure to support Contact related functions
-* Alternative 1: Use a `HashMap` to store contacts
-  * Pros: Will be more efficient to retrieve contacts from a HashMap.
-  * Cons: Requires additional memory to support the HashMap. This would worsen as the number of contacts stored increases.
-* Alternative 2: Use an `ArrayList` to store contacts
+#### Design consideration:
+
+##### Aspect: How to encapsulate the edited contact details and relay this information to EditContactCommand
+
+* **Alternative 1 (current choice):** Encapsulate all edited contact details in a class `EditContactDescriptor`
+  * Pros: Reduces the complexity of the `EditContactCommand` class constructor as the number of parameters for the constructor
+          is constant. It also reduces the level of coupling between `EditContactCommand` and `EditContactParser`
+  * Cons: Additional method calls are require to store the edited contact details in `EditContactDescriptor` class.
+  
+* **Alternative 2:** Provide the edited contact details as arguments for the `EditContactCommand` constructor
+  * Pros: Fewer method calls are required since `EditContactParser` can directly pass the edited contact arguments to the `EditContactCommand` constructor
+  * Cons: This can increase data coupling between `EditContactParser` and `EditContactCommand` which can cause unnecessary changes in
+          either class if the other class were to change.
+
+Alternative 1 was chosen as it would make future changes to any class easier and less error-prone, since there
+was less coupling between the 2 classes.
+
+##### Implementation of `EditContactCommand`
+
+* **Alternative 1 (current choice):** 
+  * Pros: Reduces coupling between the command classes and `EditContactCommand` can be implemented without restrictions,
+          or a need to consider how it might affect the other command classes
+  * Cons: Additional methods have to be implemented to replace the target contact with the edited contact
+
+* **Alternative 2:** Reuse `DeleteContactCommand` to delete the target contact and `AddContactCommand` to add the edited contact
+  * Pros: Reusing other commands would make the implementation of `EditContactCommand` simpler and easier
+  * Cons: It increases coupling between the 3 commands and this can cause issues in `EditContactCommand` if either 
+          `DeleteContactCommand` or `AddContactCommand` developed bugs or errors. Also, it might affect performance since 
+          executing `EditContactCommand` will execute 2 other commands.
+
+Alternative 1 was chosen since it gave more freedom with regard to the implementation of `EditContactCommand` since
+we were not restricted to reusing other commands. Less coupling between the classes meant that changes in one class would 
+less likely require changes to other classes.
+
+
+#### Find Contact Feature
+
+The find contact feature is important since sieving through all contacts to search for a specific contact can be 
+tedious and not user-friendly. Finding contacts using one search parameter is not meaningful 
+as the search results might not be refined and accurate.
+
+The find contact feature searches for contacts using 2 parameters: contact name and/or tag. 
+For each search parameter, contacts have to match at least one keyword to fulfil that search criteria.
+If multiple parameters are provided, e.g both name and tag keywords, only contacts that fulfil both the name and tag criteria are returned. 
+
+This feature is facilitated by the following classes:
+
+  * `FindContactParser`:
+    * It implements `FindContactParser#parse()` to parse and validate the user input
+    * It creates predicate objects using the command arguments and adds them to the list of predicates in
+      `FindContactCriteria`
+    
+  * `FindContactCriteria`:
+    * It stores all the predicates which will be used to test for matching contacts
+    * It implements the following operations:
+      * `FindContactCriteria#addPredicate():` Adds a new predicate into the list of predicates 
+         to test for matching contacts
+      * `FindContactCriteria#getFindContactPredicate():` To compose all predicates into a 
+         single predicate
+         
+    * Predicate objects that can be stored in `FindContactCriteria`:
+      * `ContactNameContainsKeywordsPredicate`:
+        * Tests if a given contact matches at least one of the name keywords provided (case-insensitive)
+      * `ContactContainsTagsPredicate`:
+        * Tests if a given contact contains at least one of the search tags provided (case-insensitive)
+        
+  * `FindContactCommand`:
+    * It implements `FindContactCommand#execute()` to find all matching contacts by updating the 
+      filtered contact list in `Model` using the predicate from `FindContactCriteria`
+       
+Given below is an example usage scenario and how the mechanism for finding contact behaves at each step:
+Step 1. `LogicManager` receives the user input `findcontact n/John t/friend` from `Ui`
+Step 2. `LogicManager` calls `ContactListParser#parseCommand()` to create a `FindContactParser`
+Step 3. Additionally, `ContactListParser` will call the `FindContactParser#parse()` method to parse the command arguments
+Step 4. This creates a `FindContactCriteria` that stores the created `Predicate` objects to test for matching contacts
+Step 4. Additionally, a `FindContactCommand` is created and `FindContactCommand#execute()` will be invoked by `LogicManager` to find matching contacts
+Step 5. The `Model#updateFilteredContactList()` operation exposed in the `Model` interface is invoked to update the displayed contact list 
+        using the predicate from `FindContactCriteria`
+Step 6. A `CommandResult` from the command execution is returned to `LogicManager`
+
+Given below is the sequence diagram of how the operation to find contact works:
+![FindContactCommandSequenceDiagram](images/Contact/FindContactCommandSequenceDiagram.png)
+Fig ??
+
+Given below is the sequence diagram showing the interaction between `FindContactParser` and `FindContactCriteria`:
+![FindContactCriteriaSequenceDiagram](images/Contact/FindContactCriteriaSequenceDiagram.png)
+
+
+#### Design consideration:
+
+##### Aspect: Storing of predicates in `FindContactCriteria`
+
+* **Alternative 1 (current choice):** Store the predicates as a list of predicates
+  * Pros: Composing the predicates into a single predicate is easier as we can simply iterate through the list
+          and compose all the predicates.
+  * Cons: Using a list means that we will not know the exact predicate objects in the list. This can make testing and
+          debugging more complicated. Moreover, we need to enforce checks on the predicate ensure that
+          null objects which can cause `NullPointerException` to be thrown are not added.
+  
+* **Alternative 2:** Store each predicate object as an individual field of `FindContactCriteria`
+  * Pros: 
+  * Cons: It is tedious to compose the predicates into a single predicate as we have to check each individual field and 
+          determine if it is null of if the predicate exists. 
+
+##### Aspect: To implement `FindContactCommand` as a single command or as separate commands for different search parameters
+
+* **Alternative 1 (current choice):**
 
 
 ### \[Proposed\] Calculate CAP feature
