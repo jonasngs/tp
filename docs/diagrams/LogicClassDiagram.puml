@@ -8,7 +8,6 @@ package Logic {
 
 package Parser {
 Interface Parser <<Interface>>
-Class ParserManager
 Class ModuleListParser
 Class ContactListParser
 Class TodoListParser
@@ -30,6 +29,7 @@ Class "{abstract}\nCommand" as Command
 
 Interface Logic <<Interface>>
 Class LogicManager
+Class ParserManager
 }
 
 package Model{
