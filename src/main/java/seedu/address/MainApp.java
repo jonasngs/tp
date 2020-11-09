@@ -222,7 +222,7 @@ public class MainApp extends Application {
             todoListOptional = storage.readTodoList();
             if (!todoListOptional.isPresent()) {
                 logger.info("Data file not found. Will be starting with a sample TodoList");
-                initialTodoList = new TodoList();
+                initialTodoList = todoListOptional.orElseGet(SampleDataUtil::getSampleTodoList);
             } else {
                 initialTodoList = todoListOptional.get();
             }

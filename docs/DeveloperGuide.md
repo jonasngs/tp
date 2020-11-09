@@ -12,13 +12,13 @@ CAP5Buddy helps NUS SoC students to keep track of their module details efficient
 module details and follows their study progress through a Command Line Interface (CLI) that allows efficient management
 of module details. CAP5Buddy also functions as a scheduling system, todo list and contact list.
 
-## **1. Setting up**
+## **Setting up**
 
 Refer to the guide [_Setting up and getting started_](SettingUp.md).
 
 --------------------------------------------------------------------------------------------------------------------
 
-## **2. Design**
+## **Design**
 
 ### Architecture
 
@@ -268,11 +268,11 @@ TodoList will be explained more comprehensively in the [TodoList feature](#33-to
 
 --------------------------------------------------------------------------------------------------------------------
 
-## **3. Implementation**
+## **Implementation**
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### 3.1 Logic
+### Logic
 ![Structure of the XYZ command](images/GeneralLogicSequenceDiagram1.png)
 ![Structure of the XYZ command](images/GeneralLogicSequenceDiagram2.png)
 
@@ -315,7 +315,7 @@ Cons:
 - Higher chance of errors, as we are mixing all the different parsers for every feature into a single Parser.
 - LONG methods.
 
-## 3.1 Module list management features
+## Module list management features
 
 ### Basic Module Tracker features
 
@@ -768,7 +768,7 @@ should end at the destroy marker (X) but due to a limitation of PlantUML, the li
 </div>
 
 
-## 3.1.4  Module zoom link management feature
+## Module zoom link management feature
 
 As Cap 5 Buddy is designed to be a module tracking application for SoC students,
 it is crucial to design features which allows efficient management of zoom links which are widely used by modules during
@@ -780,7 +780,7 @@ of these features.
 
 ### Details of implementation
 
-#### 3.1.4.1  Add zoom link feature
+#### Add zoom link feature
 
 This feature creates and adds a new `ZoomLink` for a `ModuleLesson` into a specific `Module`, if the 
 `ZoomLink` does not already exist in the module. Each `ModuleLesson` in a `Module` is only allowed to have one `ZoomLink`.
@@ -847,7 +847,7 @@ Alternative 1 was chosen since it followed OOP principles which is a good practi
 greater flexibility for expansion of the project.
 
 
-#### 3.1.4.2  Delete zoom link feature
+#### Delete zoom link feature
 
 This feature deletes an existing `ZoomLink` from a `Module` using the `ModuleLesson` that is mapped to the
 target `ZoomLink`.
@@ -897,7 +897,7 @@ Alternative 1 was chosen as it was significantly simpler to implement and did no
 We also took into consideration the fact that it is unlikely for a single lesson to have multiple zoom links.
 
 
-#### 3.1.4.3  Edit zoom link feature
+#### Edit zoom link feature
 
 This feature edits an existing zoom link in a module using the module lesson that is mapped to the
 target zoom link.
@@ -979,7 +979,7 @@ zoom link related commands.
 
 
 
-## 3.2 Contact list management feature
+## Contact list management feature
 
 As a module tracking system, Cap 5 Buddy allows users to manage a list of module-related contacts with ease.
 This is especially important since being enrolled in numerous modules can result in the need to keep track of
@@ -1010,7 +1010,7 @@ Figure ?.? Class Diagram for Contact class
 
 ###  Details of implementation
 
-#### 3.2.1  Add contact feature
+#### Add contact feature
 
 This feature creates and adds a new `Contact` into the contact list if the contact does not already exist. 
 
@@ -1068,7 +1068,7 @@ Alternative 1 was chosen since it provides users with greater freedom when creat
 mandatory can restrict users when adding contacts, hindering user experience.
 
 
-#### 3.2.2  Delete Contact Feature
+#### Delete Contact Feature
 
 The delete contact feature deletes a pre-existing `Contact` using the index of the contact on the displayed contact list.
 This feature is facilitated by the following classes: 
@@ -1116,7 +1116,7 @@ Alternative 1 was chosen since it guarantees a unique contact would be provided 
 target contact can be accurately identified and deleted, minimising the room for potential errors or bugs.  
 
 
-#### 3.2.3  Edit Contact Feature
+#### Edit Contact Feature
 
 The edit contact feature edits a pre-existing contact in the contact list using contact details provided by the users.
 This feature is facilitated by the following classes:
@@ -1199,7 +1199,7 @@ we were not restricted to reusing other commands. Less coupling between the clas
 less likely require changes to other classes.
 
 
-#### 3.2.4  Find Contact Feature
+#### Find Contact Feature
 
 The find contact feature is important since sieving through all contacts to search for a specific contact can be 
 tedious and not user-friendly. Finding contacts using one search parameter is not meaningful 
@@ -1339,7 +1339,7 @@ In addition, if the user wants to reverse order, the `ContactComparatorByName` w
 using the built-in java method `Comparator#reversed()`.
 
 
-### 3.3 TodoList feature
+### TodoList feature
 
 #### Brief Overview
 
@@ -1873,7 +1873,7 @@ checks if the user included anything after the command word and throws the `Pars
 
 
 
-### 3.4 Event list management feature
+### Event list management feature
 
 ### Add Event Feature
 ![Add Event Sequence Diagram](images/AddEventSequenceDiagram.png)
@@ -2159,8 +2159,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 (For all use cases below, the **System** is the `CAP5BUDDY` and the **Actor** is the `user`, unless specified otherwise)
 
 
-
-
 ## Module list use cases
 
 **Use case: UC01 - View a module**
@@ -2299,7 +2297,7 @@ Use case ends.
 
 Use case ends.
 
-**Use case: U08 - Add zoom link to module**
+**Use case: UC08 - Add zoom link to module**
 
 **MSS**
 
@@ -2330,7 +2328,7 @@ Use case ends.
     
      Use case ends.
   
-**Use case: Delete zoom link from module**
+**Use case: UC09 - Delete zoom link from module**
 
 **MSS**
 
@@ -2338,16 +2336,27 @@ Use case ends.
 2. User provides the module index and module lesson which the target zoom link belongs to.
 3. CAP5BUDDY deletes the zoom link from the module.
 4. CAP5BUDDY indicates that the zoom has been successfully deleted.
+ 
+  Use case ends.
 
 **Extensions**
 
   * 2a. CAP5BUDDY detects that the module index is invalid.
 
-
+    * 2a1. CAP5BUDDY displays an error message and informs the user of the invalid module index.
+        
+        Use case ends.
+        
+  * 2b. CAP5BUDDY detects that the module lesson is invalid.
+  
+    * 2b1. CAP5BUDDY displays an error message and informs the user of the invalid module lesson.
+    
+       Use case ends.
+        
 
 ## Contact list use cases
 
-**Use case: Add contact to contact list**
+**Use case: UC01 - Add contact to contact list**
 
 **MSS**
 
@@ -2373,7 +2382,7 @@ Use case ends.
     Use case ends.
 
 
-**Use Case: Delete contact from contact list**
+**Use Case: UC02 - Delete contact from contact list**
 
 **MSS**
 
@@ -2393,7 +2402,7 @@ Use case ends.
       Use case ends.
 
 
-**Use Case: Edit contact in contact list**
+**Use Case: UC03 - Edit contact in contact list**
 
 **MSS**
 
@@ -2412,13 +2421,15 @@ Use case ends.
     
       Use case ends.
   
-  * 2b. CAP5BUDDY detects that the contact details provided are invalid. (same as use case add contact)
+  * 2b. CAP5BUDDY detects that the contact details provided are invalid.
   
-  * 2c. same as use case add contact duplicate contact
+    * 2b1. * 2a1. CAP5BUDDY displays an error message and informs the use of the invalud command arguments.
+    
+      Use case ends.
   
   
   
-**Use Case: Find contacts**
+**Use Case: UC04 - Find contacts**
 
 **MSS**
 
@@ -3157,17 +3168,6 @@ testers are expected to do more *exploratory* testing.
 
    1. Test case: `targetcap 5`<br>
       Expected: Target CAP details are calculated. Target CAP details shown in the status message.    
-   
-<<<<<<< HEAD
- 
-      
-
-
-
-
-
-
-
 
 
 #### Adding a zoom link
@@ -3250,9 +3250,6 @@ testers are expected to do more *exploratory* testing.
    
    1. Test case: `editzoom 1 z/https://nus-sg.zoom.us/newZoomLink` <br>
       Expected: No zoom link is added. Error message for invalid command format is shown in the status message.
-
-
-
 
 
 
@@ -3490,15 +3487,6 @@ testers are expected to do more *exploratory* testing.
    1. Test case: `editevent -1 n/Testing`
       Expected: Invalid event index Error message thrown, no Events will be edited.
 
-#### Find Event
-1. Finding an Event using a valid event name
-
-<<<<<<< HEAD
-
-
-
-
-
 #### Finding a task
 
 1. Prerequisites: List out all tasks using the `listtask` command. Multiple tasks in the list.
@@ -3547,17 +3535,6 @@ testers are expected to do more *exploratory* testing.
    
    1. Test case: `findtask` <br>
       Expected: No task will be found. Error message for invalid command format shown in the status message. The displayed todolist remains unchanged.
-
-
-
-
-
-### Event List
-
-   1. Test case: `findevent n/CS2100`
-      Expected: All Events with `CS2100` in its name will be displayed.
-
-
 
 ### Common Features
 

@@ -510,10 +510,17 @@ assignments will contain the following fields:
   * The assignment takes up a percentage of the final grade, `ASSIGNMENT_PERCENTAGE`.
 
   * Your `ASSIGNMENT_RESULT` can only range from `0.00 - 100`
+  
+  * The changes for your assignment would only be seen through using the `viewmodule` command.
 
   Example:
   * `addassignment n/CS2100 a/Quiz 1 %/5 r/80` adds an assignment called `Quiz 1` to the module `CS2100`. `Quiz 1`
   carries `5`% of the final grade and the result for this assignment is `80`.
+
+  Expected Outcome: 
+  
+ <p aligin="center"><img src="docs/images/GradeTracker/AddAssignment.PNG" border="2px solid black"></p>
+
 
 #### Editing an assignment in a module: `editassignment`
 
@@ -553,6 +560,9 @@ To be implemented:
   * You can retrieve the index of the assignment list by using the `viewmodule` command to list out the details of the module.
 
   * The index **must be a positive integer** 1, 2, 3...
+  
+  * The changes for your assignment would only be seen through using the `viewmodule` command.
+
 
   Example of usage:
    * `deleteassignment 2 n/CS2100` deletes the assignment at position `2` of the module `CS2100`.
@@ -569,9 +579,15 @@ To be implemented:
   
   * The existing `GRADE` will be overwritten by the new `GRADE` being added.
   
+  * The changes for your assignment would only be seen through using the `viewmodule` command.
+
   Example of usage:
    * `addgrade n/CS2100 g/85` adds a grade of `85` to the module `CS2100`.
    
+   Expected Outcome: 
+     
+<p aligin="center"><img src="docs/images/GradeTracker/AddGrade.PNG" border="2px solid black"></p>
+
 #### Calculating Cumulative Average Point(CAP): `calculatecap`
 
 Calculates the user's CAP based on completed modules

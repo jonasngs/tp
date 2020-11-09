@@ -1,5 +1,6 @@
 package seedu.address.model.util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -14,6 +15,8 @@ import seedu.address.model.ModuleList;
 import seedu.address.model.ReadOnlyContactList;
 import seedu.address.model.ReadOnlyEventList;
 import seedu.address.model.ReadOnlyModuleList;
+import seedu.address.model.ReadOnlyTodoList;
+import seedu.address.model.TodoList;
 import seedu.address.model.contact.Contact;
 // import seedu.address.model.contact.ContactName;
 // import seedu.address.model.contact.Email;
@@ -35,6 +38,11 @@ import seedu.address.model.module.grade.AssignmentPercentage;
 import seedu.address.model.module.grade.AssignmentResult;
 import seedu.address.model.module.grade.GradeTracker;
 import seedu.address.model.tag.Tag;
+import seedu.address.model.task.Date;
+import seedu.address.model.task.Priority;
+import seedu.address.model.task.Status;
+import seedu.address.model.task.Task;
+import seedu.address.model.task.TaskName;
 
 /**
  * Contains utility methods for populating {@code AddressBook} with sample data.
@@ -159,5 +167,37 @@ public class SampleDataUtil {
         Event sampleEventTwo = new Event(new EventName("CS2103T PE"), new EventTime(dateTime), tags);
         sampleEv.addEvent(sampleEventTwo);
         return sampleEv;
+    }
+
+    public static ReadOnlyTodoList getSampleTodoList() {
+        TodoList todoList = new TodoList();
+        for (Task t : getSampleTasks()) {
+            todoList.addTask(t);
+        }
+        return todoList;
+    }
+    public static Task[] getSampleTasks() {
+        Task first = new Task(new TaskName("Finish Lab 01"));
+        first = first.setTags(new HashSet<>(Arrays.asList(new Tag("Lab"), new Tag("CS2030"))));
+        first = first.setPriority(Priority.valueOf("HIGH"));
+        first = first.setDate(new Date(LocalDate.now().plusDays(3).toString()));
+        first = first.setStatus(Status.NOT_COMPLETED);
+        first = first.setDateCreated(LocalDate.now().minusDays(1));
+
+        Task second = new Task(new TaskName("Finish Lab 02"));
+        second = second.setTags(new HashSet<>(Arrays.asList(new Tag("Lab"), new Tag("CS2100"))));
+        second = second.setPriority(Priority.valueOf("NORMAL"));
+        second = second.setDate(new Date(LocalDate.now().plusDays(4).toString()));
+        second = second.setStatus(Status.NOT_COMPLETED);
+        first = first.setDateCreated(LocalDate.now().minusDays(2));
+
+        Task third = new Task(new TaskName("Finish Assignment03"));
+        third = third.setTags(new HashSet<>(Arrays.asList(new Tag("Assignment"), new Tag("CS2105"))));
+        third = third.setPriority(Priority.valueOf("LOW"));
+        third = third.setDate(new Date(LocalDate.now().plusDays(5).toString()));
+        third = third.setStatus(Status.COMPLETED);
+        first = first.setDateCreated(LocalDate.now().minusDays(1));
+
+        return new Task[] {first, second, third};
     }
 }

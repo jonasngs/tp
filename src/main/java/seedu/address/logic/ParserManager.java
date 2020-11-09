@@ -43,7 +43,7 @@ public class ParserManager {
             return this.todoListParser;
         } else if (commandWord.contains("contact")) {
             return this.contactListParser;
-        } else if (commandWord.contains("assignment")) {
+        } else if (commandWord.contains("assignment") || commandWord.contains("grade") ) {
             return this.gradeTrackerParser;
         } else if (commandWord.contains("event")) {
             return this.schedulerParser;

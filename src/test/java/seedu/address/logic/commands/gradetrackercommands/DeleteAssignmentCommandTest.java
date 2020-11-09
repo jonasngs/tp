@@ -18,7 +18,6 @@ import static seedu.address.testutil.TypicalModules.getTypicalModuleList;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.model.ContactList;
@@ -113,20 +112,6 @@ public class DeleteAssignmentCommandTest {
         DeleteAssignmentCommand command = new DeleteAssignmentCommand(INDEX_FIRST_ASSIGNMENT, moduleNameNotInList);
 
         assertCommandFailure(command, expectedModel, DeleteAssignmentCommand.MESSAGE_ASSIGNMENT_NOT_DELETED);
-    }
-
-    @Test
-    public void execute_invalidIndex_throwsCommandException() {
-        ModuleList expectedModuleList = new ModuleListBuilder().build();
-        Module expectedModule = new ModuleBuilder().withName(VALID_MODULENAME_CS2103T)
-                .withAssignment(VALID_ASSIGNMENT_NAME_1, VALID_ASSIGNMENT_PERCENTAGE_1, VALID_ASSIGNMENT_RESULT_1)
-                .build();
-        expectedModuleList.addModule(expectedModule);
-        Model expectedModel = new ModelManager(expectedModuleList, new ModuleList(),
-                new ContactList(), new TodoList(), new EventList(), new UserPrefs());
-        DeleteAssignmentCommand command = new DeleteAssignmentCommand(INDEX_SECOND_MODULE, expectedModule.getName());
-
-        assertCommandFailure(command, expectedModel, Messages.MESSAGE_INVALID_MODULE_DISPLAYED_INDEX);
     }
 
     @Test
