@@ -12,6 +12,7 @@ import seedu.address.logic.commands.schedulercommands.AddEventCommand;
 import seedu.address.logic.commands.schedulercommands.DeleteEventCommand;
 import seedu.address.logic.commands.schedulercommands.EditEventCommand;
 import seedu.address.logic.commands.schedulercommands.FindEventCommand;
+import seedu.address.logic.commands.schedulercommands.ListEventCommand;
 import seedu.address.logic.commands.schedulercommands.ViewEventCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.logic.parser.schedulerparsers.AddEventParser;
@@ -61,8 +62,26 @@ public class SchedulerParser implements FeatureParser {
         case FindEventCommand.COMMAND_WORD:
             return new FindEventParser().parse(arguments);
 
+        case ListEventCommand.COMMAND_WORD:
+            return singleWordCommandsChecker(ListEventCommand.COMMAND_WORD, arguments);
+
         default:
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
+        }
+    }
+
+    private Command singleWordCommandsChecker(String commandWord, String argument) throws ParseException {
+        if (!argument.equals("")) {
+            throw new ParseException("Invalid input format, extra string after the command word.");
+        }
+
+        switch (commandWord) {
+
+        case ListEventCommand.COMMAND_WORD:
+            return new ListEventCommand();
+
+        default:
+            throw new ParseException("Invalid command");
         }
     }
 }

@@ -519,7 +519,7 @@ assignments will contain the following fields:
 
   Expected Outcome: 
   
- <p aligin="center"><img src="docs/images/GradeTracker/AddAssignment.PNG" border="2px solid black"></p>
+ <p aligin="center"><img src="images/GradeTracker/AddAssignment.png" border="2px solid black"></p>
 
 
 #### Editing an assignment in a module: `editassignment`
@@ -586,7 +586,7 @@ To be implemented:
    
    Expected Outcome: 
      
-<p aligin="center"><img src="docs/images/GradeTracker/AddGrade.PNG" border="2px solid black"></p>
+<p aligin="center"><img src="images/GradeTracker/AddGrade.png" border="2px solid black"></p>
 
 #### Calculating Cumulative Average Point(CAP): `calculatecap`
 
@@ -613,6 +613,9 @@ Expected Outcome:
 ![FindContact](images/contact/FindContactUG.PNG)
 
 ### Todo List Features
+
+The GUI for TodoList is shown below
+<p aligin="center"><img src="images/TodoList/todo1.png" border="2px solid black"></p>
 
 Todo List can store all of your tasks that you need to complete. Before you start learning how to use the commands
 for Todo List, you should first understand the details of a task.
@@ -683,6 +686,10 @@ Examples:
 * `addtask n/read book t/DAILY t/HOBBY p/low d/2020-10-10` adds a task with the given input.
 
 * `addtask n/finish assignemnt t/SCHOOL d/2020-12-10` adds a task with the given input.
+
+Expected output:
+
+<p aligin="center"><img src="images/TodoList/todo2.png" border="2px solid black"></p>
 
 #### Deleting a task: `deletetask`
 
@@ -1330,7 +1337,7 @@ Action | Format, Examples
 **List Contacts** | `listcontact`
 **Sort Contacts** | `sortcontact`
 **Mark Contact as Important** | `importantcontact INDEX` <br> e.g. `importantcontact 1`
-**Mark Contact as unimportant | `resetcontact INDEX` <br> `resetcontact 1`
+**Mark Contact as unimportant** | `resetcontact INDEX` <br> `resetcontact 1`
 **Clear Contact**  | `clearcontact`
 
 
@@ -1338,6 +1345,15 @@ Action | Format, Examples
 
 Action | Format, Examples
 --------|------------------
+**Add Task** | `addtask n/TASK_NAME [t/TAG]... [p/PRIORITY] [d/DATE]`
+**Edit Task** | `edittask INDEX [n/TASK_NAME] [t/TAG]... [p/PRIORITY] [d/DATE]`
+**Find Task** | `findtask [n/NAME_KEYWORDS] [d/DATE] [p/PRIORITY] [s/STATUS] [t/TAG_KEYWORDS]`
+**Delete Task** | `deletetask INDEX`
+**List Tasks** | `listtask`
+**Sort Tasks** | `sorttask [r] CRITERION`
+**Label Task as Completed** | `completetask INDEX`
+**Label Task as Not Completed** | `resettask INDEX`
+**Clear Tasks** | `cleartask`
 
 
 ## Command summary for Scheduler

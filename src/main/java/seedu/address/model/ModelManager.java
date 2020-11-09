@@ -57,7 +57,8 @@ public class ModelManager implements Model {
     private int accessPointer;
     private final List<CommandType> accessSequence;
     private boolean isArchiveModuleOnDisplay = false;
-
+    //=== EventList =======================================================
+    private EventList displayEventList;
     /**
      * Initializes a ModelManager with the given moduleList, archivedModuleList, contactList, todoList,
      * eventList and userPrefs.
@@ -82,6 +83,7 @@ public class ModelManager implements Model {
         this.versionedEventList = new VersionedEventList(eventList);
         this.versionedTodoList = new VersionedTodoList(todoList);
         this.userPrefs = new UserPrefs(userPrefs);
+        this.displayEventList = new EventList(eventList);
         filteredModulesDisplay = new FilteredList<>(this.moduleListDisplay.getModuleList());
         sortedContacts = new SortedList<>(this.contactList.getContactList());
         filteredContacts = new FilteredList<>(sortedContacts);
@@ -503,6 +505,11 @@ public class ModelManager implements Model {
     public void updateFilteredTodoList(Predicate<Task> predicate) {
         requireNonNull(predicate);
         filteredTasks.setPredicate(predicate);
+    }
+
+    @Override
+    public void displayEventList() {
+        this.displayEventList.resetData(eventList);
     }
 
     @Override

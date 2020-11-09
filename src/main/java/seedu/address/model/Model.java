@@ -349,6 +349,11 @@ public interface Model {
     void addEvent(Event event);
 
     /**
+     * Displays the list of all events.
+     */
+    void displayEventList();
+
+    /**
      * Replaces the given Event {@code target} with {@code editedEvent}.
      * {@code target} must exist in the Event list.
      * The Event identity of {@code editedEvent} must not be the same as another existing Event in the Event List.
