@@ -5,14 +5,7 @@ title: About Us
 
 We are a team based in the [School of Computing, National University of Singapore](http://www.comp.nus.edu.sg).
 
-You can reach us at the following emails:
-* Jonas Ng: `e0415645@u.nus.edu`
-* Li HuanKang:
-* David Cai:
-* Joshua Wong:
-* Michael:
-
-## Cap 5.0 Buddy Team
+## CAP5Buddy Team
 
 ### Jonas Ng
 
@@ -22,7 +15,6 @@ You can reach us at the following emails:
 [[portfolio](team/jonasngs.md)]
 
 * Role: Team lead, Integration
-* Responsibilities:
 
 ### Li Huankang (Matthias)
 
@@ -32,7 +24,6 @@ You can reach us at the following emails:
 [[portfolio](team/matthiaslhk.md)]
 
 * Role: Team Lead , Scheduling and tracking
-* Responsibilities: Responsible for overall project coordination and in charge of defining, assigning, and tracking project tasks.
 
 ### Michael Setia Atmaja
 
@@ -42,7 +33,6 @@ You can reach us at the following emails:
 [[portfolio](team/michael-setia.md)]
 
 * Role: Developer
-* Responsibilities: Data
 
 ### David Cai Qifan
 
@@ -52,7 +42,6 @@ You can reach us at the following emails:
 [[portfolio](team/davidcaiqifan.md)]
 
 * Role: Developer
-* Responsibilities: Dev Ops + Threading
 
 ### Joshua Wong
 
@@ -62,4 +51,3 @@ You can reach us at the following emails:
 [[portfolio](team/murtubak.md)]
 
 * Role: Developer
-* Responsibilities: Code quality
